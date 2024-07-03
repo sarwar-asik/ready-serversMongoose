@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
-import { User } from '../users/user.model';
+
 import {
   ILogin,
   ILoginResponse,
@@ -13,6 +13,7 @@ import { Secret } from 'jsonwebtoken';
 import 'colors';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import config from '../../../config';
+import { User } from '../USER/user.model';
 
 const authLoginServices = async (payload: ILogin): Promise<ILoginResponse> => {
   const { phoneNumber, password } = payload;
@@ -67,7 +68,6 @@ const authLoginServices = async (payload: ILogin): Promise<ILoginResponse> => {
 const refreshTokenServices = async (
   token: string
 ): Promise<IRefreshTokenResponse> => {
-
   console.log(token, 'from refreshTokenService'.red.bold);
 
   let verifiedToken = null;
@@ -77,7 +77,7 @@ const refreshTokenServices = async (
       token,
       config.jwt.refresh_secret as Secret
     );
-    console.log(verifiedToken,"verifyToken".red.bold);
+    console.log(verifiedToken, 'verifyToken'.red.bold);
   } catch (error) {
     throw new ApiError(httpStatus.FORBIDDEN, 'Invalid your refreshToken');
   }
