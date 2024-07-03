@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
 import mongoose from 'mongoose';
-import config from './config/index.js';
+// import config from './config/index.js';
 import 'colors';
 // import { logger, errorLogger } from './shared/logger';
 import app from './app';
 import { Server } from 'http';
+import config from './config';
 
 process.on('uncaughtException', err => {
   console.log('UnCaught rejection is detected from serve.ts', err);
@@ -13,12 +14,12 @@ process.on('uncaughtException', err => {
 
 let server: Server;
 
-// console.log(config.data_url, 'config file'.red.bold);
+console.log(config.data_url, 'config file Data'.red.bold);
 
 async function mainFUnction() {
   try {
     await mongoose.connect(config.data_url as string, {
-      dbName: 'Cow-hut',
+      dbName: 'Serwar-DB',
     });
 
     console.log('db Connected successfully '.green.underline.bold);
