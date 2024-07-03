@@ -1,8 +1,9 @@
 import express from 'express';
 
 import validateRequest from '../../middlesWare/validateUserRequest';
-import { UserValidation } from '../users/user.validation';
+
 import { createUserAuthController } from './signup.controller';
+import { UserValidation } from '../USER/user.validation';
 
 
 const router = express.Router();

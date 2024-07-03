@@ -1,6 +1,6 @@
 import ApiError from '../../../errors/ApiError';
-import { IUser } from '../users/user.interface';
-import { User } from '../users/user.model';
+import { IUser } from '../USER/user.interface';
+import { User } from '../USER/user.model';
 
 export const createUserAuthServices = async (
   user: IUser
@@ -12,5 +12,5 @@ export const createUserAuthServices = async (
     throw new ApiError(400, 'Failed to create new User');
   }
   return createdUser;
-  return null
+  return null;
 };

@@ -20,12 +20,14 @@ const cors_1 = __importDefault(require("cors"));
 const globalErrorHandler_1 = __importDefault(require("./app/middlesWare/globalErrorHandler"));
 const routes_1 = __importDefault(require("./app/routes"));
 const sendResponce_1 = __importDefault(require("./shared/sendResponce"));
-const user_utils_1 = require("./app/modules/users/user.utils");
+// import { generateFacultyId } from './app/modules/users/user.utils';
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 // import { createUser } from './app/modules/users/users.services'
 const app = (0, express_1.default)();
 // const port = 3000
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
 // Application
 // app.use('/api/v1/users', UserRouter)
@@ -41,7 +43,7 @@ app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // next("next error")
     (0, sendResponce_1.default)(res, {
         success: true,
-        message: 'Running the Cow hut server',
+        message: 'Running the Sarwar server',
         statusCode: 201,
         data: null,
     });
@@ -68,7 +70,7 @@ app.use((req, res, next) => {
 //   year: '2025',
 // };
 const testId = () => __awaiter(void 0, void 0, void 0, function* () {
-    const testId = yield (0, user_utils_1.generateFacultyId)();
+    // const testId = await generateFacultyId();
     console.log(testId, 'testId from app.ts');
 });
 testId();

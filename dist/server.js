@@ -14,25 +14,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 /* eslint-disable no-console */
 const mongoose_1 = __importDefault(require("mongoose"));
-const config_ts_1 = __importDefault(require("./config.ts"));
+// import config from './config/index.js';
 require("colors");
 // import { logger, errorLogger } from './shared/logger';
 const app_1 = __importDefault(require("./app"));
+const config_1 = __importDefault(require("./config"));
 process.on('uncaughtException', err => {
     console.log('UnCaught rejection is detected from serve.ts', err);
     process.exit(1);
 });
 let server;
-// console.log(config.data_url, 'config file'.red.bold);
+console.log(config_1.default.data_url, 'config file Data'.red.bold);
 function mainFUnction() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield mongoose_1.default.connect(config_ts_1.default.data_url, {
-                dbName: 'Cow-hut',
+            yield mongoose_1.default.connect(config_1.default.data_url, {
+                dbName: 'Serwar-DB',
             });
             console.log('db Connected successfully '.green.underline.bold);
-            server = app_1.default.listen(config_ts_1.default.port, () => {
-                console.log(`server app listening on port ${config_ts_1.default.port}`.green.bold);
+            server = app_1.default.listen(config_1.default.port, () => {
+                console.log(`server app listening on port ${config_1.default.port}`.green.bold);
             });
         }
         catch (error) {
