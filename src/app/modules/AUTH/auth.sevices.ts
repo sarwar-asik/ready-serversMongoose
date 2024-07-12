@@ -14,6 +14,7 @@ import 'colors';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import config from '../../../config';
 import { User } from '../USER/user.model';
+import { IUser } from '../USER/user.interface';
 
 const authLoginServices = async (payload: ILogin): Promise<ILoginResponse> => {
   const { phoneNumber, password } = payload;
@@ -95,4 +96,23 @@ const refreshTokenServices = async (
   };
 };
 
-export const authServices = { authLoginServices, refreshTokenServices };
+
+export const signUpServices = async (
+  user: IUser
+): Promise<IUser | null> => {
+  // console.log(user, 'from services');
+
+  const createdUser = await User.create(user);
+  if (!createdUser) {
+    throw new ApiError(400, 'Failed to create new User');
+  }
+  return createdUser;
+  return null;
+};
+
+
+export const authServices = {
+  authLoginServices,
+  refreshTokenServices,
+  signUpServices,
+};

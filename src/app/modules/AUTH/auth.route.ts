@@ -1,35 +1,30 @@
-import express from 'express'
+import express from 'express';
 
+import validateRequest from '../../middlesWare/validateUserRequest';
+import { AuthValidation } from './auth.validation';
+import { authController, signUpAuthController } from './auth.controller';
 
-import validateRequest from '../../middlesWare/validateUserRequest'
-import { AuthValidation } from './auth.validation'
-import { authController } from './auth.controller'
+import { UserValidation } from '../USER/user.validation';
 
-import { createUserAuthController } from './signup.controller'
-import { UserValidation } from '../USER/user.validation'
-
-
-const router = express.Router()
+const router = express.Router();
 
 router.post(
-    '/signup',
-    validateRequest(UserValidation.createUserZodSchema),
-    createUserAuthController
-  )
+  '/signup',
+  validateRequest(UserValidation.createUserZodSchema),
+  signUpAuthController
+);
 router.post(
-'/login',
-validateRequest(AuthValidation.createUserZodSchema),
-authController.loginController
-)
+  '/login',
+  validateRequest(AuthValidation.createUserZodSchema),
+  authController.loginController
+);
 
 router.post(
-'/refresh-token',
-validateRequest(AuthValidation.refreshTokenZodSchema),
-authController.refreshTokenController
-)
-
-
+  '/refresh-token',
+  validateRequest(AuthValidation.refreshTokenZodSchema),
+  authController.refreshTokenController
+);
 
 // router.get("/",userController.getUser)
 
-export const AuthRouter = router
+export const AuthRouter = router;
