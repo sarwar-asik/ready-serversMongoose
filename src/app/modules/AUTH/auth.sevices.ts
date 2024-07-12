@@ -96,20 +96,17 @@ const refreshTokenServices = async (
   };
 };
 
-
-export const signUpServices = async (
-  user: IUser
-): Promise<IUser | null> => {
+export const signUpServices = async (user: IUser): Promise<IUser | null> => {
   // console.log(user, 'from services');
 
   const createdUser = await User.create(user);
+
   if (!createdUser) {
     throw new ApiError(400, 'Failed to create new User');
   }
   return createdUser;
-  return null;
+  // return null;
 };
-
 
 export const authServices = {
   authLoginServices,

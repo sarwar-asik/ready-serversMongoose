@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/sarwar/WEB/JOB/Task/Antopolis/antopolis-server/logs/winston/success/.845da1af1562b996817090786e4b39f694f2b05e-audit.json",
+    "files": [
+        {
+            "date": 1720764048243,
+            "name": "/home/sarwar/WEB/JOB/Task/Antopolis/antopolis-server/logs/winston/success/ph-2024-07-12-12-success.log",
+            "hash": "df3fb5a114627f5a01531c61584464160fb140b9ced2d88ffc024e443d3bd595"
+        }
+    ],
+    "hashType": "sha256"
+}
