@@ -23,7 +23,7 @@ const create_image = async (req: Request, res: Response) => {
 };
 
 const getImageUrl = async (req: Request, res: Response) => {
-  console.log("get image hit")
+  console.log('get image hit');
   let fileId = req.params.id;
   fileId = fileId.replace(/\.[^/.]+$/, '');
 
