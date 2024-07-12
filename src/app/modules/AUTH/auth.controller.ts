@@ -6,7 +6,7 @@ import sendResponse from '../../../shared/sendResponce';
 
 import config from '../../../config';
 import { IRefreshTokenResponse } from './auth.Interface';
-import { authServices } from './auth.sevices';
+import { authServices, signUpServices } from './auth.sevices';
 import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
 
@@ -35,7 +35,6 @@ const loginController = catchAsync(async (req: Request, res: Response) => {
     });
   }
 });
-
 
 const refreshTokenController = catchAsync(
   async (req: Request, res: Response) => {
@@ -66,4 +65,26 @@ const refreshTokenController = catchAsync(
   }
 );
 
-export const authController = { loginController, refreshTokenController };
+export const signUpAuthController = catchAsync(
+  async (req: Request, res: Response) => {
+    const { ...user } = req.body;
+    // console.log(user, 'from controller=================');
+
+    const result = await signUpServices(user);
+    if (result) {
+      sendResponse(res, {
+        success: true,
+        message: 'successfully create User',
+        statusCode: 200,
+        data: result,
+      });
+      // next()
+    }
+  }
+);
+
+export const authController = {
+  loginController,
+  refreshTokenController,
+  signUpAuthController,
+};
