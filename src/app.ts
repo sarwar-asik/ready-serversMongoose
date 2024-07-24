@@ -84,12 +84,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 //   year: '2025',
 // };
 
-const testId = async () => {
-  // const testId = await generateFacultyId();
+// const testId = async () => {
+//   // const testId = await generateFacultyId();
 
-  console.log(testId, 'testId from app.ts');
-};
+//   console.log(testId, 'testId from app.ts');
+// };
 
-testId();
+// testId();
 
 export default app;

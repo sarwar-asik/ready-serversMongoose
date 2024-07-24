@@ -25,7 +25,7 @@ let server: Server;
 async function connection() {
   try {
     await mongoose.connect(config.database_url as string, {
-      dbName: 'Antopolis-Server',
+      dbName: 'Ready-Server',
     });
     config.env === 'production'
       ? logger.info(`Database connection successful`.green.underline.bold)

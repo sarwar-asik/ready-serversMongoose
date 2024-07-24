@@ -80,9 +80,9 @@ app.use((req, res, next) => {
 //   code: '01',
 //   year: '2025',
 // };
-const testId = () => __awaiter(void 0, void 0, void 0, function* () {
-    // const testId = await generateFacultyId();
-    console.log(testId, 'testId from app.ts');
-});
-testId();
+// const testId = async () => {
+//   // const testId = await generateFacultyId();
+//   console.log(testId, 'testId from app.ts');
+// };
+// testId();
 exports.default = app;

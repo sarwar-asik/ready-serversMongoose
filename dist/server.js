@@ -35,7 +35,7 @@ function connection() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield mongoose_1.default.connect(index_1.default.database_url, {
-                dbName: 'Antopolis-Server',
+                dbName: 'Ready-Server',
             });
             index_1.default.env === 'production'
                 ? logger_1.logger.info(`Database connection successful`.green.underline.bold)
