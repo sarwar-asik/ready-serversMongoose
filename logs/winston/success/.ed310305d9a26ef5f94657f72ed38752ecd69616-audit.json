@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "C:\\Users\\sarwar\\WEB\\SparkTech\\LifeSyncServer\\life-synce-server\\logs\\winston\\success\\.ed310305d9a26ef5f94657f72ed38752ecd69616-audit.json",
+    "files": [
+        {
+            "date": 1724903318380,
+            "name": "C:\\Users\\sarwar\\WEB\\SparkTech\\LifeSyncServer\\life-synce-server\\logs\\winston\\success\\ph-2024-08-29-09-success.log",
+            "hash": "68313739de3f1fea6f23c91693c9b2f3eff305d708df80f708742a73d8f5cc34"
+        }
+    ],
+    "hashType": "sha256"
+}

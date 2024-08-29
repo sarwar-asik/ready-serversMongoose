@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { Request, Response } from 'express';
-import sharp from 'sharp';
+// import sharp from 'sharp';
 import { ImageService } from './image.service';
 import sendResponse from '../../../shared/sendResponce';
 import httpStatus from 'http-status';
@@ -45,12 +45,12 @@ const getImageUrl = async (req: Request, res: Response) => {
     const contentType = fileType === 'jpg' ? 'image/jpeg' : 'application/pdf';
 
     // Implement compression and optimization
-    let imageBuffer = Buffer.from(fileDoc.buffer, 'base64');
-    if (fileType === 'jpg') {
-      imageBuffer = await sharp(imageBuffer).jpeg({ quality: 85 }).toBuffer();
-    } else if (fileType === 'png') {
-      imageBuffer = await sharp(imageBuffer).png({ quality: 85 }).toBuffer();
-    }
+    // let imageBuffer = Buffer.from(fileDoc.buffer, 'base64');
+    // if (fileType === 'jpg') {
+    //   imageBuffer = await sharp(imageBuffer).jpeg({ quality: 85 }).toBuffer();
+    // } else if (fileType === 'png') {
+    //   imageBuffer = await sharp(imageBuffer).png({ quality: 85 }).toBuffer();
+    // }
 
     // Set the content type and status manually, as sendResponse can't handle binary data directly
     res.contentType(contentType);
@@ -60,7 +60,8 @@ const getImageUrl = async (req: Request, res: Response) => {
       statusCode: httpStatus.OK,
       success: true,
       message: 'Image get successfully',
-      data: imageBuffer,
+      // data: imageBuffer,
+      data: null,
     });
   }
 };
