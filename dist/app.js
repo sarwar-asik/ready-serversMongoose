@@ -54,7 +54,7 @@ app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // next("next error")
     (0, sendResponce_1.default)(res, {
         success: true,
-        message: 'Running the Sarwar server',
+        message: 'Running the Sarwar server' + ' from  ' + process.pid,
         statusCode: 201,
         data: null,
     });

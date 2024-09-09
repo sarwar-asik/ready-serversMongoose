@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ImageController = void 0;
-const sharp_1 = __importDefault(require("sharp"));
+// import sharp from 'sharp';
 const image_service_1 = require("./image.service");
 const sendResponce_1 = __importDefault(require("../../../shared/sendResponce"));
 const http_status_1 = __importDefault(require("http-status"));
@@ -53,13 +53,12 @@ const getImageUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const fileType = fileDoc.fileType;
         const contentType = fileType === 'jpg' ? 'image/jpeg' : 'application/pdf';
         // Implement compression and optimization
-        let imageBuffer = Buffer.from(fileDoc.buffer, 'base64');
-        if (fileType === 'jpg') {
-            imageBuffer = yield (0, sharp_1.default)(imageBuffer).jpeg({ quality: 85 }).toBuffer();
-        }
-        else if (fileType === 'png') {
-            imageBuffer = yield (0, sharp_1.default)(imageBuffer).png({ quality: 85 }).toBuffer();
-        }
+        // let imageBuffer = Buffer.from(fileDoc.buffer, 'base64');
+        // if (fileType === 'jpg') {
+        //   imageBuffer = await sharp(imageBuffer).jpeg({ quality: 85 }).toBuffer();
+        // } else if (fileType === 'png') {
+        //   imageBuffer = await sharp(imageBuffer).png({ quality: 85 }).toBuffer();
+        // }
         // Set the content type and status manually, as sendResponse can't handle binary data directly
         res.contentType(contentType);
         // res.status(httpStatus.OK).send(imageBuffer);
@@ -68,7 +67,8 @@ const getImageUrl = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             statusCode: http_status_1.default.OK,
             success: true,
             message: 'Image get successfully',
-            data: imageBuffer,
+            // data: imageBuffer,
+            data: null,
         });
     }
 });
