@@ -6,24 +6,9 @@
     "auditLog": "C:\\Users\\sarwar\\WEB\\Cloned\\ready-serversMongoose\\logs\\winston\\success\\.3480b49e6e19af58f1ea62654adab0cddad7e33d-audit.json",
     "files": [
         {
-            "date": 1725702579006,
-            "name": "C:\\Users\\sarwar\\WEB\\Cloned\\ready-serversMongoose\\logs\\winston\\success\\ph-2024-09-07-15-success.log",
-            "hash": "1bc5041182c2a9f4ba864013a26caa4071af4a6577c89e114559bf331aee0562"
-        },
-        {
-            "date": 1725706083685,
-            "name": "C:\\Users\\sarwar\\WEB\\Cloned\\ready-serversMongoose\\logs\\winston\\success\\ph-2024-09-07-16-success.log",
-            "hash": "d0df240474243a9db0bda14fc8dffdf8ec3d779c99cb1ff7e8e304cdffb1d4ba"
-        },
-        {
-            "date": 1725711339682,
-            "name": "C:\\Users\\sarwar\\WEB\\Cloned\\ready-serversMongoose\\logs\\winston\\success\\ph-2024-09-07-18-success.log",
-            "hash": "b26a633bdb137a979ea249468a67eb7d3af31a05dc304ce5935c5a1d01461650"
-        },
-        {
-            "date": 1725767257903,
-            "name": "C:\\Users\\sarwar\\WEB\\Cloned\\ready-serversMongoose\\logs\\winston\\success\\ph-2024-09-08-09-success.log",
-            "hash": "53f72c225a162b40a17ec264a90ac8452f47f7dd6c9465e91730f202a25caf3c"
+            "date": 1725857615989,
+            "name": "C:\\Users\\sarwar\\WEB\\Cloned\\ready-serversMongoose\\logs\\winston\\success\\ph-2024-09-09-10-success.log",
+            "hash": "c6439d671fc5d9e4c5f9709b5756c999cef96d4a79a2bf1b91ec14ceb5dc4950"
         }
     ],
     "hashType": "sha256"
