@@ -12,7 +12,11 @@ import sendResponse from './shared/sendResponce';
 import cookieParser from 'cookie-parser';
 import config from './config';
 import compression from 'compression';
-import compressionOptions from './config/compression.config';
+import {
+  compressionOptions,
+  limiterRate,
+} from './config/expressMiddleware.config';
+
 // import { createUser } from './app/modules/users/users.services'
 
 const app: Application = express();
@@ -32,10 +36,13 @@ app.use(
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression(compressionOptions)); ///! used for compressing the response at large response . It will reduce the response time & size
+app.use(limiterRate); ///! for stop hacking by  limiting too much request
+
 // Application
 
 // app.use('/api/v1/users', UserRouter)
