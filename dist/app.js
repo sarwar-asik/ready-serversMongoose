@@ -23,6 +23,8 @@ const sendResponce_1 = __importDefault(require("./shared/sendResponce"));
 // import { generateFacultyId } from './app/modules/users/user.utils';
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const config_1 = __importDefault(require("./config"));
+const compression_1 = __importDefault(require("compression"));
+const expressMiddleware_config_1 = require("./config/expressMiddleware.config");
 // import { createUser } from './app/modules/users/users.services'
 const app = (0, express_1.default)();
 // const port = 3000
@@ -40,6 +42,9 @@ app.use((0, cors_1.default)({
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
+app.use(expressMiddleware_config_1.helmetConfig);
+app.use((0, compression_1.default)(expressMiddleware_config_1.compressionOptions)); ///! used for compressing the response at large response . It will reduce the response time & size
+app.use(expressMiddleware_config_1.limiterRate); ///! for stop hacking by  limiting too much request
 // Application
 // app.use('/api/v1/users', UserRouter)
 // app.use("/api/v1/semester",semesterRouter)

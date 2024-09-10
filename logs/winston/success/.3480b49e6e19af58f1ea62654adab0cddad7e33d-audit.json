@@ -6,9 +6,9 @@
     "auditLog": "C:\\Users\\sarwar\\WEB\\Cloned\\ready-serversMongoose\\logs\\winston\\success\\.3480b49e6e19af58f1ea62654adab0cddad7e33d-audit.json",
     "files": [
         {
-            "date": 1725964823766,
+            "date": 1725963389545,
             "name": "C:\\Users\\sarwar\\WEB\\Cloned\\ready-serversMongoose\\logs\\winston\\success\\ph-2024-09-10-16-success.log",
-            "hash": "8ed58ee4f7958a3a641b9536086af6862fbbbf4ea1d39210f22454c3416cfaa0"
+            "hash": "8d930213e9b3c2f5905e9b23522b9c33df80dfc8d616050df14498fec88988aa"
         }
     ],
     "hashType": "sha256"

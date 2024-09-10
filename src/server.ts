@@ -14,7 +14,7 @@ mongoose.set('strictQuery', false);
 process.on('uncaughtException', error => {
   config.env === 'production'
     ? errorLogger.error(error)
-    : console.log('uncaugthException is detected ......', error);
+    : console.log('uncaughtException is detected ......', error);
   process.exit(1);
 });
 
