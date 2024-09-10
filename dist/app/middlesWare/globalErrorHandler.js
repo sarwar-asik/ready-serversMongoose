@@ -13,7 +13,8 @@ const index_2 = __importDefault(require("../../config/index"));
 const zod_1 = require("zod");
 const handleZOdError_1 = __importDefault(require("../../errors/handleZOdError"));
 const handleCastError_1 = __importDefault(require("../../errors/handleCastError"));
-const GlobalHandler = (error, req, res) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+const GlobalHandler = (error, req, res, next) => {
     index_2.default.env === 'development'
         ? console.log('globalErrorHandler', error)
         : console.log('Error from globalError', error);

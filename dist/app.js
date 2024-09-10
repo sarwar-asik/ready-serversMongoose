@@ -42,7 +42,7 @@ app.use((0, cors_1.default)({
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
-// app.use(helmetConfig);
+app.use(expressMiddleware_config_1.helmetConfig);
 app.use((0, compression_1.default)(expressMiddleware_config_1.compressionOptions)); ///! used for compressing the response at large response . It will reduce the response time & size
 app.use(expressMiddleware_config_1.limiterRate); ///! for stop hacking by  limiting too much request
 // Application
