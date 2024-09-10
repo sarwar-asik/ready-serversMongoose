@@ -14,8 +14,10 @@ import config from './config';
 import compression from 'compression';
 import {
   compressionOptions,
+  helmetConfig,
   limiterRate,
 } from './config/expressMiddleware.config';
+
 
 // import { createUser } from './app/modules/users/users.services'
 
@@ -40,6 +42,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use(helmetConfig);
 app.use(compression(compressionOptions)); ///! used for compressing the response at large response . It will reduce the response time & size
 app.use(limiterRate); ///! for stop hacking by  limiting too much request
 

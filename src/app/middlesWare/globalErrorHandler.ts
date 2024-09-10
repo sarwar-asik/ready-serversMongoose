@@ -13,7 +13,8 @@ import { ZodError } from 'zod';
 import handleZOdError from '../../errors/handleZOdError';
 import handleCastError from '../../errors/handleCastError';
 
-const GlobalHandler: ErrorRequestHandler = (error, req, res) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+const GlobalHandler: ErrorRequestHandler = (error, req, res, next) => {
   configTs.env === 'development'
     ? console.log('globalErrorHandler', error)
     : console.log('Error from globalError', error);
