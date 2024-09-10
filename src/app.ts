@@ -3,9 +3,7 @@ import httpStatus from 'http-status';
 // const express = require('express')
 import express, { Application, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
-
 import GlobalHandler from './app/middlesWare/globalErrorHandler';
-
 import routes from './app/routes';
 import sendResponse from './shared/sendResponce';
 // import { generateFacultyId } from './app/modules/users/user.utils';
@@ -17,8 +15,6 @@ import {
   helmetConfig,
   limiterRate,
 } from './config/expressMiddleware.config';
-
-
 // import { createUser } from './app/modules/users/users.services'
 
 const app: Application = express();
@@ -65,7 +61,7 @@ app.get('/', async (req: Request, res: Response) => {
   // next("next error")
   sendResponse(res, {
     success: true,
-    message: 'Running the Sarwar server' + ' from  ' + process.pid,
+    message: 'Running the Sarwar server' + ' from  ' + process.pid + 'cpu',
     statusCode: 201,
     data: null,
   });
@@ -95,12 +91,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 //   year: '2025',
 // };
 
-// const testId = async () => {
-//   // const testId = await generateFacultyId();
+const TestFunc = async () => {
+  // const testId = await generateFacultyId();
+  console.log('TestFunc from app.ts');
+};
 
-//   console.log(testId, 'testId from app.ts');
-// };
-
-// testId();
+TestFunc();
 
 export default app;
