@@ -1,6 +1,11 @@
+import httpStatus from 'http-status';
 import config from '../../../config';
 // import { IImage } from './image.interface';
 import { Image_model } from './image.model';
+import ApiError from '../../../errors/ApiError';
+import { Request } from 'express';
+import { uploadLocalFileURL } from '../../../helpers/upload.helper';
+import { IImage } from './image.interface';
 
 const create_image_db = async (
   bufferFile: Buffer | undefined,
@@ -17,4 +22,38 @@ const create_image_db = async (
 // const getImageUrl = async (id: string): Promise<string> => {
 
 // };
-export const ImageService = { create_image_db };
+
+const createLocalImage = async (
+  req: Request
+): Promise<Partial<IImage> | null> => {
+  // return `${req.protocol}://${req.get('host')}`;
+  try {
+    if (req.file) {
+      const profileImage = uploadLocalFileURL(req, 'single', 'img');
+
+      if (profileImage && typeof profileImage !== 'undefined') {
+        const profileImg = profileImage as any; // Cast to correct type
+
+        const createImageDB = await Image_model.create({
+          fileType: profileImg.fileType,
+          original_filename: profileImg.original_filename,
+          path: profileImg.path,
+          img_url: `${req.protocol}://${req.get('host')}/${profileImg.img_url}`,
+          size: profileImg.size,
+        });
+
+        return createImageDB;
+      }
+    }
+    return null;
+  } catch (error) {
+    // console.error('Error creating local image:', error);
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Error creating local image'
+    );
+    return null;
+  }
+};
+
+export const ImageService = { create_image_db, createLocalImage };

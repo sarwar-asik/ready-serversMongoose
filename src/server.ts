@@ -9,6 +9,7 @@ import { Server } from 'http';
 // import config from './config';
 import { errorLogger, logger } from './shared/logger';
 import config from './config/index';
+import { createDirectories } from './utils/runFileUploadFolder';
 mongoose.set('strictQuery', false);
 
 process.on('uncaughtException', error => {
@@ -39,6 +40,7 @@ async function connection() {
         : console.log(
             `Server is listening on port ${config.port}`.red.underline.bold
           );
+      createDirectories();
     });
   } catch (error) {
     config.env === 'production'

@@ -5,7 +5,7 @@ import express, { Application, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import GlobalHandler from './app/middlesWare/globalErrorHandler';
 import routes from './app/routes';
-import sendResponse from './shared/sendResponce';
+// import sendResponse from './shared/sendResponce';
 // import { generateFacultyId } from './app/modules/users/user.utils';
 import cookieParser from 'cookie-parser';
 import config from './config';
@@ -16,7 +16,7 @@ import {
   limiterRate,
 } from './config/expressMiddleware.config';
 // import { createUser } from './app/modules/users/users.services'
-
+import path from "path"
 const app: Application = express();
 // const port = 3000
 
@@ -50,25 +50,20 @@ app.use(limiterRate); ///! for stop hacking by  limiting too much request
 //*** */ or ***////
 app.use('/api/v1', routes);
 
+app.use(express.static('uploads'));
+app.use('/uploadFile', express.static(path.join(__dirname, '../uploadFile')));
 app.get('/', async (req: Request, res: Response) => {
-  //  const addUser = await createUser({id:"445",role:"admin",password:"asdfasdf"})
-
-  // res.send(addUser)
-  // throw new ApiError(400, 'Error from app.ts')
-  // Promise.reject(new Error('Unhandle Promise from app.ts'))
-
-  // throw new Error("Error from app.get")
-  // next("next error")
-  sendResponse(res, {
-    success: true,
-    message: 'Running the Sarwar server' + ' from  ' + process.pid + 'cpu',
-    statusCode: 201,
-    data: null,
-  });
+   res.json({
+     success: true,
+     message: 'Running the LifeSync server',
+     statusCode: 201,
+     data: null,
+     serverUrl: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+   });
   // next();
 });
 
-app.use(GlobalHandler);
+
 
 // for unknown apiii hit error handle
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -84,7 +79,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   });
   next();
 });
-
+app.use(GlobalHandler);
 // for testing userId dynamic based on yaer and code ///
 // const academicSemester = {
 //   code: '01',
