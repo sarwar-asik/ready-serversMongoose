@@ -46,7 +46,7 @@ const ${capitalize(folderName)}Schema: Schema<I${capitalize(
   }
 );
 
-export const ${capitalize(folderName)}_model = model<I${capitalize(
+export const ${capitalize(folderName)}Model = model<I${capitalize(
         folderName
       )}>('${capitalize(folderName)}',  ${capitalize(folderName)}Schema);
 `,
@@ -56,17 +56,36 @@ export const ${capitalize(folderName)}_model = model<I${capitalize(
     getCode: folderName =>
       `
 import { I${capitalize(folderName)} } from './${folderName}.interface';
-import { ${capitalize(folderName)}_model } from './${folderName}.model';
-
-const create_${folderName}_db = async (payload: I${capitalize(
+import { ${capitalize(folderName)}Model } from './${folderName}.model';
+import { Request } from 'express';
+import QueryBuilder from '../../../builder/QueryBuilder';
+const create${capitalize(folderName)}Db = async (payload: I${capitalize(
         folderName
       )}): Promise<I${capitalize(folderName)}> => {
-  const result = await ${capitalize(folderName)}_model.create(payload);
+  const result = await ${capitalize(folderName)}Model.create(payload);
   
   return result;
 };
 
-export const ${capitalize(folderName)}Service = { create_${folderName}_db };
+const all${capitalize(folderName)}Db = async (req: Request) => {
+  const query = req.query;
+  const ${capitalize(folderName)}Query = new QueryBuilder(
+    ${capitalize(folderName)}Model.find({ isActive: true }),
+    query
+  ).paginate();
+
+  const totalCount = await ${capitalize(folderName)}Query.countTotal();
+  const result = await ${capitalize(folderName)}Query.modelQuery;
+
+  return {
+    meta: totalCount,
+    data: result,
+  };
+};
+
+export const ${capitalize(folderName)}Service = { create${capitalize(
+        folderName
+      )}Db, all${capitalize(folderName)}Db };
 
 `,
   },
@@ -78,12 +97,13 @@ import { Request, Response } from 'express';
 import { ${capitalize(folderName)}Service  } from './${folderName}.service';
 import sendResponse from '../../../shared/sendResponce';
 import httpStatus from 'http-status';
+import catchAsync from '../../../shared/catchAsync';
 
-const create_${folderName} = async (req: Request, res: Response) => {
+const create${folderName} = catchAsync( async (req: Request, res: Response) => {
   const { ...${folderName}Data } = req.body;
-  const response = await ${capitalize(
-    folderName
-  )}Service.create_${folderName}_db(${folderName}Data,);
+  const response = await ${capitalize(folderName)}Service.create${capitalize(
+        folderName
+      )}Db(${folderName}Data,);
 
   if (response) {
     sendResponse(res, {
@@ -93,9 +113,26 @@ const create_${folderName} = async (req: Request, res: Response) => {
       data: response,
     });
   }
-};
+});
 
-export const ${capitalize(folderName)}Controller = { create_${folderName} };
+const get${capitalize(
+        folderName
+      )}s = catchAsync(async (req: Request, res: Response) => {
+  const result = await ${capitalize(folderName)}Service.all${capitalize(
+        folderName
+      )}Db(req);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'All ${capitalize(folderName)}s retrieved successfully !',
+    data: result.data,
+    meta: result.meta,
+  });
+});
+
+export const ${capitalize(
+        folderName
+      )}Controller = { create${folderName} ,get${capitalize(folderName)}s};
 
 `,
   },
@@ -105,7 +142,7 @@ export const ${capitalize(folderName)}Controller = { create_${folderName} };
     getCode: folderName =>
       `
 import { z } from 'zod';
-const create_${capitalize(folderName)} = z.object({
+const create${capitalize(folderName)} = z.object({
   body: z.object({
     title: z.number({
       required_error: 'title is Required (zod)',
@@ -115,10 +152,12 @@ const create_${capitalize(folderName)} = z.object({
     })
   }),
 });
-
-export const ${capitalize(folderName)}Validation = { create_${capitalize(
+const update${capitalize(folderName)}Validation = create${capitalize(
         folderName
-      )} };
+      )}.deepPartial();
+export const ${capitalize(folderName)}Validation = { create${capitalize(
+        folderName
+      )},update${capitalize(folderName)}Validation };
 
 
 `,
@@ -129,13 +168,24 @@ export const ${capitalize(folderName)}Validation = { create_${capitalize(
       `/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Router } from 'express';
+import auth from '../../middlesWare/auth';
+import { ENUM_USER_ROLE } from '../../../enums/user';
 import { ${capitalize(
         folderName
       )}Controller } from './${folderName}.controller';
 import {${capitalize(folderName)}Validation } from './${folderName}.validation';
+
+
 const router = Router();
 router.get('/')
-router.post('/')
+router.post(
+  '/create',
+  auth(ENUM_USER_ROLE.USER),
+  validateRequest(${capitalize(folderName)}Validation.create${capitalize(
+        folderName
+      )}Validation),
+  ${capitalize(folderName)}Controller.create${capitalize(folderName)}
+);
 
 export const ${capitalize(folderName)}Routes = router;
 `,

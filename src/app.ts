@@ -74,7 +74,7 @@ app.use(GlobalHandler);
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(httpStatus.NOT_FOUND).json({
     success: false,
-    message: 'NOt Found',
+    message: 'Not Found the path',
     errorMessages: [
       {
         path: req.originalUrl,
