@@ -6,11 +6,11 @@ import sendResponse from '../../../shared/sendResponce';
 import httpStatus from 'http-status';
 import { Image_model } from './image.model';
 
-const create_image = async (req: Request, res: Response) => {
+const createBufferImage = async (req: Request, res: Response) => {
   // const { ...imageData } = req.body;
   const bufferFile = req.file?.buffer;
   const fileType = req.file?.mimetype.startsWith('image') ? 'jpg' : 'pdf';
-  const response = await ImageService.create_image_db(bufferFile, fileType);
+  const response = await ImageService.createBufferImageDB(bufferFile, fileType);
 
   if (response) {
     sendResponse(res, {
@@ -76,4 +76,4 @@ const getImageUrl = async (req: Request, res: Response) => {
   }
 };
 
-export const ImageController = { create_image, getImageUrl, createLocalImage };
+export const ImageController = { createBufferImage, getImageUrl, createLocalImage };

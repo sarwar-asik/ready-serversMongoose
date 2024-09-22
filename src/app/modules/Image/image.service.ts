@@ -7,7 +7,7 @@ import { Request } from 'express';
 import { uploadLocalFileURL } from '../../../helpers/upload.helper';
 import { IImage } from './image.interface';
 
-const create_image_db = async (
+const createBufferImageDB = async (
   bufferFile: Buffer | undefined,
   fileType: string
 ): Promise<string> => {
@@ -44,6 +44,8 @@ const createLocalImage = async (
 
         return createImageDB;
       }
+      // eslint-disable-next-line no-console
+      console.log(req.body.img);
     }
     return null;
   } catch (error) {
@@ -52,8 +54,8 @@ const createLocalImage = async (
       httpStatus.INTERNAL_SERVER_ERROR,
       'Error creating local image'
     );
-    return null;
+    // return null;
   }
 };
 
-export const ImageService = { create_image_db, createLocalImage };
+export const ImageService = { createBufferImageDB, createLocalImage };
