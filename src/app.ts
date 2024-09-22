@@ -16,7 +16,9 @@ import {
   limiterRate,
 } from './config/expressMiddleware.config';
 // import { createUser } from './app/modules/users/users.services'
-import path from "path"
+import path from "path";
+import swaggerUi from 'swagger-ui-express';
+import { openapiSpecification } from './utils/swagger';
 const app: Application = express();
 // const port = 3000
 
@@ -52,6 +54,8 @@ app.use('/api/v1', routes);
 
 app.use(express.static('uploads'));
 app.use('/uploadFile', express.static(path.join(__dirname, '../uploadFile')));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 app.get('/', async (req: Request, res: Response) => {
    res.json({
      success: true,

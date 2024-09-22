@@ -16,13 +16,17 @@ const upload = multer({
 });
 
 router.get('/get/:id', ImageController.getImageUrl);
-router.put('/upload', upload.single('image'), ImageController.create_image);
+router.put(
+  '/upload',
+  upload.single('image'),
+  ImageController.createBufferImage
+);
 
 // ! with advance multer
 
 router.post(
   '/create-local',
-  uploadFile.single('imagefile'),
+  uploadFile.single('imageFile'),
   ImageController.createLocalImage
 );
 
