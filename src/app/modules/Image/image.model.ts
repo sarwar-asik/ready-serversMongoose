@@ -4,8 +4,12 @@ import { model } from 'mongoose';
 
 const ImageSchema: Schema<IImage> = new Schema<IImage>(
   {
-    buffer: { type: Buffer, required: true },
+    buffer: { type: Buffer },
     fileType: { type: String, required: true },
+    original_filename: { type: String },
+    path: { type: String },
+    img_url: { type: String },
+    size: { type: Number },
   },
   {
     timestamps: true,

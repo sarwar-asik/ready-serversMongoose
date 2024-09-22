@@ -4,6 +4,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import { ImageController } from './image.controller';
 import { ImageValidation } from './image.validation';
+import { uploadFile } from '../../middlesWare/fileUploader';
 const router = Router();
 
 const storage = multer.memoryStorage();
@@ -16,5 +17,13 @@ const upload = multer({
 
 router.get('/get/:id', ImageController.getImageUrl);
 router.put('/upload', upload.single('image'), ImageController.create_image);
+
+// ! with advance multer
+
+router.post(
+  '/create-local',
+  uploadFile.single('imagefile'),
+  ImageController.createLocalImage
+);
 
 export const ImageRoutes = router;

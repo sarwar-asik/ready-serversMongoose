@@ -22,6 +22,16 @@ const create_image = async (req: Request, res: Response) => {
   }
 };
 
+const createLocalImage = async (req: Request, res: Response) => {
+  const result = await ImageService.createLocalImage(req);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: 'Image created successfully',
+    data: result,
+  });
+};
 const getImageUrl = async (req: Request, res: Response) => {
   console.log('get image hit');
   let fileId = req.params.id;
@@ -66,4 +76,4 @@ const getImageUrl = async (req: Request, res: Response) => {
   }
 };
 
-export const ImageController = { create_image, getImageUrl };
+export const ImageController = { create_image, getImageUrl, createLocalImage };
