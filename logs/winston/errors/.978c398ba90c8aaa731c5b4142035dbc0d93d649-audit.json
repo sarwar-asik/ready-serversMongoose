@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 5
+    },
+    "auditLog": "C:\\Users\\sarwa\\WEB\\PP\\Projects\\ready-serversMongoose\\logs\\winston\\errors\\.978c398ba90c8aaa731c5b4142035dbc0d93d649-audit.json",
+    "files": [
+        {
+            "date": 1727934282403,
+            "name": "C:\\Users\\sarwa\\WEB\\PP\\Projects\\ready-serversMongoose\\logs\\winston\\errors\\ph-error-2024-10-03-11-error.log",
+            "hash": "65127acf6c1f55a6e70654a7750fbdd05af58e1209f4b3a0dd64de195bc5c375"
+        }
+    ],
+    "hashType": "sha256"
+}
