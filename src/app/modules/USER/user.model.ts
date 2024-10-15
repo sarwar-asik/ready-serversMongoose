@@ -10,7 +10,7 @@ import bcrypt from 'bcrypt';
 //   Buyer :"buyer",
 // }
 
-const UserSchema: Schema<IUser> = new Schema<IUser>(
+export const UserSchema: Schema<IUser> = new Schema<IUser>(
   {
     password: { type: String, required: true },
     role: { type: String, required: true, enum: ['buyer', 'seller', 'admin'] },
