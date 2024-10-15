@@ -55,4 +55,38 @@ const options: swaggerJsdoc.Options = {
   ],
 };
 
-export const openapiSpecification = swaggerJsdoc(options);
+// ! swagger UI customization sections
+export const swaggerUiOptions = {
+  customSiteTitle: 'Life Sync API Docs',
+  customfavIcon:'/uploadFile/images/default/life-synce-fav.png',
+  customCss: `
+      .swagger-ui .topbar { 
+          //  display: none !important;
+      background-color: #2c3e50 !important; 
+      border-bottom: 2px solid #2980b9;
+    }
+    .swagger-ui .topbar a span { 
+      color: #ecf0f1 !important;
+      font-weight: bold;
+    }
+    .swagger-ui .topbar .topbar-wrapper { 
+      // display: none !important; 
+    }
+    .swagger-ui .topbar .topbar-wrapper::before {
+      content: 'Life Sync API Docs';
+      color: #fff;
+      font-size: 18px;
+      margin:auto;
+      padding:24px;
+      text-align: center;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  `,
+  swaggerOptions: {
+    docExpansion: 'none', // Collapses the routes by default
+  },
+};
+export const swaggerApiSpecification = swaggerJsdoc(options);
+
+

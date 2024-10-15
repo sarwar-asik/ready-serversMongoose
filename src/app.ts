@@ -18,7 +18,7 @@ import {
 // import { createUser } from './app/modules/users/users.services'
 import path from "path";
 import swaggerUi from 'swagger-ui-express';
-import { openapiSpecification } from './utils/swagger';
+import { openapiSpecification, swaggerApiSpecification, swaggerUiOptions } from './utils/swagger';
 const app: Application = express();
 // const port = 3000
 
@@ -55,7 +55,10 @@ app.use('/api/v1', routes);
 app.use(express.static('uploads'));
 app.use('/uploadFile', express.static(path.join(__dirname, '../uploadFile')));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerApiSpecification,swaggerUiOptions));
+
+
 app.get('/', async (req: Request, res: Response) => {
    res.json({
      success: true,
