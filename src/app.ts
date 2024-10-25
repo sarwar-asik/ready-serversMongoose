@@ -64,7 +64,7 @@ app.get('/', async (req: Request, res: Response) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const responseData: any = {
     success: true,
-    message: 'Running the LifeSync server',
+    message: 'Running the LifeSync server.',
     statusCode: 201,
   }
 

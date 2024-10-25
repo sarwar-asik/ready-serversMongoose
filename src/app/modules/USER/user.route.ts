@@ -23,7 +23,9 @@ router.get(
 
 router.get('/:id', auth(ENUM_USER_ROLE.ADMIN), userController.getSingleUser);
 
-router.get('/', auth(ENUM_USER_ROLE.ADMIN), userController.getALLUser);
+router.get('/', 
+  // auth(ENUM_USER_ROLE.ADMIN), 
+  userController.getALLUser);
 
 router.delete('/:id', auth(ENUM_USER_ROLE.ADMIN), userController.deleteUser);
 

@@ -34,7 +34,7 @@ const getALLUser = catchAsync(async (req: Request, res: Response) => {
   const data = await User.find({});
   sendResponse(res, {
     success: true,
-    message: 'successfully get Users',
+    message: 'Successfully get Users.',
     statusCode: 200,
     data: data,
   });
@@ -124,7 +124,7 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
   const id = verifiedUser?._id;
 
   const updatedData = req.body;
-  
+
   const newUpdateData = updatedData
 
 
