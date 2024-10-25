@@ -7,7 +7,7 @@ RUN yarn
 
 COPY . .
 
-VOLUME [ "/logs" ]
+# VOLUME [ "/logs" ]
 
 EXPOSE 5000
 

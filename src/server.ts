@@ -22,7 +22,6 @@ process.on('uncaughtException', error => {
 let server: Server;
 
 // console.log(config.data_url, 'config file Data'.red.bold);
-
 async function connection() {
   try {
     await mongoose.connect(config.database_url as string, {
