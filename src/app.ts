@@ -18,7 +18,7 @@ import {
 // import { createUser } from './app/modules/users/users.services'
 import path from "path";
 import swaggerUi from 'swagger-ui-express';
-import { openapiSpecification, swaggerApiSpecification, swaggerUiOptions } from './utils/swagger';
+import { swaggerApiSpecification, swaggerUiOptions } from './utils/swagger';
 const app: Application = express();
 // const port = 3000
 
