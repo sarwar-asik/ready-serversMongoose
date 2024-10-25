@@ -6,9 +6,19 @@
     "auditLog": "C:\\Users\\sarwa\\WEB\\PP\\Projects\\ready-serversMongoose\\logs\\winston\\errors\\.978c398ba90c8aaa731c5b4142035dbc0d93d649-audit.json",
     "files": [
         {
-            "date": 1727934282403,
-            "name": "C:\\Users\\sarwa\\WEB\\PP\\Projects\\ready-serversMongoose\\logs\\winston\\errors\\ph-error-2024-10-03-11-error.log",
-            "hash": "65127acf6c1f55a6e70654a7750fbdd05af58e1209f4b3a0dd64de195bc5c375"
+            "date": 1729832054493,
+            "name": "C:\\Users\\sarwa\\WEB\\PP\\Projects\\ready-serversMongoose\\logs\\winston\\errors\\ph-error-2024-10-25-10-error.log",
+            "hash": "291bad7965153576acc5c4aa6476cff69276365cfbed63609d3a83e8ac9d484c"
+        },
+        {
+            "date": 1729835121719,
+            "name": "C:\\Users\\sarwa\\WEB\\PP\\Projects\\ready-serversMongoose\\logs\\winston\\errors\\ph-error-2024-10-25-11-error.log",
+            "hash": "28134d0b0cfedab8193137d734e6d520a7c6c3dfdfa0f6f0d2175af0dc836dc3"
+        },
+        {
+            "date": 1729836626033,
+            "name": "C:\\Users\\sarwa\\WEB\\PP\\Projects\\ready-serversMongoose\\logs\\winston\\errors\\ph-error-2024-10-25-12-error.log",
+            "hash": "3790d122c4328cd4ec259286fed24d0f3682e21265307eddeeea1d5503b9d9d1"
         }
     ],
     "hashType": "sha256"
