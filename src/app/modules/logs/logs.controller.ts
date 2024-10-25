@@ -8,7 +8,7 @@ const getAllErrorLogs = async (req: Request, res: Response) => {
   const errorFiles = listLogFiles("errors");
 
   if (errorFiles.length === 0) {
-    res.status(200).send(`<h1>Error Logs</h1><p>No error logs available.</p>`);
+    res.status(200).send(`<h1>Error Logs page..</h1><p>No error logs page available.</p>`);
   } else {
     const fileListHTML = errorFiles
       .map(
@@ -21,13 +21,13 @@ const getAllErrorLogs = async (req: Request, res: Response) => {
     res.status(200).send(`
     <html>
       <head>
-        <title>Error Logs</title>
+        <title>Error Logs page</title>
         <link rel="stylesheet" href="/styles.css">
       </head>
       <body>
-        <h1>Error Logs</h1>
+        <h1>Error Logs page</h1>
         <ul>${fileListHTML}</ul>
-        <a href="/">Back to Home</a>
+        <a href="/">Back to Home Logs page</a>
       </body>
     </html>
   `);
@@ -39,7 +39,7 @@ const getAllSuccessLogs = async (req: Request, res: Response) => {
   if (successFiles.length === 0) {
     res
       .status(200)
-      .send(`<h1>Success Logs</h1><p>No success logs available.</p>`);
+      .send(`<h1>Success Logs page</h1><p>No success logs page available.</p>`);
   } else {
     const fileListHTML = successFiles
       .map(
@@ -52,13 +52,14 @@ const getAllSuccessLogs = async (req: Request, res: Response) => {
     res.status(200).send(`
     <html>
       <head>
-        <title>Success Logs</title>
+        <title>Success Logs page..</title>
         <link rel="stylesheet" href="/styles.css">
       </head>
       <body>
-        <h1>Success Logs</h1>
+        <h1>Success Logs page</h1>
         <ul>${fileListHTML}</ul>
-        <a href="/">Back to Home</a>
+        <a href="/">Back to Home Logs page</a>
+
       </body>
     </html>
   `);
@@ -87,7 +88,7 @@ const getSpecificErrorLog = async (req: Request, res: Response) => {
             <body>
               <h1>Error</h1>
               <p>Failed to read log file.</p>
-              <a href="/logs/errors">Back to Error Logs</a>
+              <a href="/logs/errors">Back to Error Logs page</a>
             </body>
           </html>
         `);
@@ -101,7 +102,7 @@ const getSpecificErrorLog = async (req: Request, res: Response) => {
             <body>
               <h1>Log File: ${logfile}</h1>
               <pre>${data}</pre>
-              <a href="/logs/errors">Back to Error Logs</a>
+              <a href="/logs/errors">Back to Error Logs page</a>
             </body>
           </html>
         `);
@@ -117,7 +118,7 @@ const getSpecificErrorLog = async (req: Request, res: Response) => {
         <body>
           <h1>Log Not Found</h1>
           <p>The log file ${logfile} does not exist.</p>
-          <a href="/logs/errors">Back to Error Logs</a>
+          <a href="/logs/errors">Back to Error Logs page</a>
         </body>
       </html>
     `);
@@ -148,7 +149,7 @@ const getSpecificSuccessLog = async (req: Request, res: Response) => {
             <body>
               <h1>Error</h1>
               <p>Failed to read log file.</p>
-              <a href="/logs/successes">Back to Success Logs</a>
+              <a href="/logs/successes">Back to Success Logs page</a>
             </body>
           </html>
         `);
@@ -162,7 +163,7 @@ const getSpecificSuccessLog = async (req: Request, res: Response) => {
             <body>
               <h1>Log File: ${logfile}</h1>
               <pre>${data}</pre>
-              <a href="/logs/successes">Back to Success Logs</a>
+              <a href="/logs/successes">Back to Success Logs page</a>
             </body>
           </html>
         `);
@@ -178,14 +179,14 @@ const getSpecificSuccessLog = async (req: Request, res: Response) => {
           <body>
             <h1>Log Not Found</h1>
             <p>The log file ${logfile} does not exist.</p>
-            <a href="/logs/successes">Back to Success Logs</a>
+            <a href="/logs/successes">Back to Success Logs page</a>
           </body>
         </html>
       `);
   }
 };
 
-export const logsController = {
+export const logs pageController = {
   getAllSuccessLogs,
   getAllErrorLogs,
   getSpecificSuccessLog,

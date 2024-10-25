@@ -25,8 +25,6 @@ router.post(
   authController.refreshTokenController
 );
 
-// router.get("/",userController.getUser)
-
 
 
 /**
