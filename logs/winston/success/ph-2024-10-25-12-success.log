@@ -1,0 +1,48 @@
+{
+  message: '\x1B[1m\x1B[4m\x1B[32mDatabase connection successful\x1B[39m\x1B[24m\x1B[22m',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2024-10-25T06:16:14.866Z'
+}
+{
+  message: '\x1B[1m\x1B[4m\x1B[31mServer is listening on port 5000\x1B[39m\x1B[24m\x1B[22m',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2024-10-25T06:16:14.872Z'
+}
+{
+  message: '\x1B[1m\x1B[4m\x1B[32mDatabase connection successful\x1B[39m\x1B[24m\x1B[22m',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2024-10-25T06:16:20.141Z'
+}
+{
+  message: '\x1B[1m\x1B[4m\x1B[31mServer is listening on port 5000\x1B[39m\x1B[24m\x1B[22m',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2024-10-25T06:16:20.148Z'
+}
+{
+  message: '\x1B[1m\x1B[4m\x1B[32mDatabase connection successful\x1B[39m\x1B[24m\x1B[22m',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2024-10-25T06:16:31.698Z'
+}
+{
+  message: '\x1B[1m\x1B[4m\x1B[31mServer is listening on port 5000\x1B[39m\x1B[24m\x1B[22m',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2024-10-25T06:16:31.704Z'
+}
+{
+  message: '\x1B[1m\x1B[4m\x1B[32mDatabase connection successful\x1B[39m\x1B[24m\x1B[22m',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2024-10-25T06:16:39.219Z'
+}
+{
+  message: '\x1B[1m\x1B[4m\x1B[31mServer is listening on port 5000\x1B[39m\x1B[24m\x1B[22m',
+  level: 'info',
+  label: 'right meow!',
+  timestamp: '2024-10-25T06:16:39.227Z'
+}

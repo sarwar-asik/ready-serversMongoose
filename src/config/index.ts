@@ -20,4 +20,12 @@ export default {
     refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN,
   },
   server_url: process.env.SERVER_URL,
+  smtp: {
+    smtp_host: process.env.SMTP_HOST,
+    smtp_port: process.env.SMTP_PORT,
+    smtp_service: process.env.SMTP_SERVICE,
+    smtp_mail: process.env.SMTP_MAIL,
+    smtp_password: process.env.SMTP_PASSWORD,
+    NAME: process.env.SERVICE_NAME,
+  },
 };

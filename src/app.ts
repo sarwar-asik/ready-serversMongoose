@@ -19,6 +19,7 @@ import {
 import path from "path";
 import swaggerUi from 'swagger-ui-express';
 import { swaggerApiSpecification, swaggerUiOptions } from './utils/swagger';
+import { LogsRoutes } from './app/modules/logs/logs.routes';
 const app: Application = express();
 // const port = 3000
 
@@ -27,10 +28,10 @@ app.use(
     origin:
       config.env === 'development'
         ? [
-            'http://localhost:3000',
-            'http://127.0.0.1:3000',
-            'http://192.168.0.101:3000',
-          ]
+          'http://localhost:3000',
+          'http://127.0.0.1:3000',
+          'http://192.168.0.101:3000',
+        ]
         : [''],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
@@ -56,17 +57,23 @@ app.use(express.static('uploads'));
 app.use('/uploadFile', express.static(path.join(__dirname, '../uploadFile')));
 
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerApiSpecification,swaggerUiOptions));
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerApiSpecification, swaggerUiOptions));
+app.use("/logs", LogsRoutes);
 
 app.get('/', async (req: Request, res: Response) => {
-   res.json({
-     success: true,
-     message: 'Running the LifeSync server',
-     statusCode: 201,
-     data: null,
-     serverUrl: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
-   });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const responseData: any = {
+    success: true,
+    message: 'Running the LifeSync server',
+    statusCode: 201,
+  }
+
+  if (config.env === 'development' || req.query?.mode === "dev") {
+    responseData.serverUrl = `http://localhost:${config.port}`;
+    responseData.logsError = `http://localhost:${config.port}/logs/errors`;
+    responseData.logsSuccess = `http://localhost:${config.port}/logs/successes`;
+  }
+  res.json(responseData);
   // next();
 });
 
