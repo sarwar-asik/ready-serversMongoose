@@ -22,7 +22,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   if (result) {
     sendResponse(res, {
       success: true,
-      message: 'successfully create User',
+      message: 'successfully create Users',
       statusCode: 200,
       data: result,
     });
@@ -34,7 +34,7 @@ const getALLUser = catchAsync(async (req: Request, res: Response) => {
   const data = await User.find({});
   sendResponse(res, {
     success: true,
-    message: 'Successfully get Users.',
+    message: 'Successfully get Users data',
     statusCode: 200,
     data: data,
   });
