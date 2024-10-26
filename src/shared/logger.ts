@@ -31,7 +31,7 @@ const logger = createLogger({
         'logs',
         'winston',
         'success',
-        'ph-%DATE%-success.log'
+        'server-%DATE%-success.log'
       ),
       datePattern: 'YYYY-MM-DD-HH',
       zippedArchive: true,
@@ -59,7 +59,7 @@ const errorLogger = createLogger({
         'logs',
         'winston',
         'errors',
-        'ph-error-%DATE%-error.log'
+        'server-error-%DATE%-error.log'
       ),
       datePattern: 'YYYY-MM-DD-HH',
       zippedArchive: true,

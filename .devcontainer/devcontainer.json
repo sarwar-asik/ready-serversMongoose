@@ -1,0 +1,23 @@
+{
+  "name": "ready-mongoose-container",
+  "image": "node:20",
+  "workspaceFolder": "/app",
+  "mounts": [
+      // Bind mount for your local project
+      "source=/C/Users/sarwa/WEB/PP/Projects/ready-serversMongoose,target=/app,type=bind",
+      
+      // Named volume for logs
+      "source=ready-mongoose-logs,target=/app/logs,type=volume",
+      
+      // Anonymous volume for node_modules
+      "target=/app/node_modules,type=volume"
+  ],
+  "runArgs": [
+      "--name",
+      "ready-mongoose-container",
+      "-p",
+      "5000:5000",
+      "--rm"
+  ],
+  "postCreateCommand": "npm install"
+}
