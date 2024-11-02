@@ -47,8 +47,6 @@ app.use(limiterRate); ///! for stop hacking by  limiting too much request
 
 // Application
 
-// app.use('/api/v1/users', UserRouter)
-// app.use("/api/v1/semester",semesterRouter)
 
 //*** */ or ***////
 app.use('/api/v1', routes);
@@ -94,11 +92,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 app.use(GlobalHandler);
-// for testing userId dynamic based on yaer and code ///
-// const academicSemester = {
-//   code: '01',
-//   year: '2025',
-// };
+
 
 const TestFunc = async () => {
   // const testId = await generateFacultyId();

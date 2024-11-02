@@ -75,7 +75,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IUser>(res, {
     statusCode: 201,
     success: true,
-    message: 'Academic Faculty updated successfully',
+    message: 'User updated successfully',
     data: result,
   });
 });
