@@ -35,8 +35,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build the app
         run: yarn build
-      - name: Run the app
-        run: yarn dev
+      # - name: Run the app
+      #   run: yarn dev
 
   deploy-dashboard:
     runs-on: ubuntu-latest
