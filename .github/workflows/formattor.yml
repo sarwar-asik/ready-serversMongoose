@@ -1,0 +1,17 @@
+name: formattor Workflow
+
+on: push # when push on the repo
+
+jobs: 
+  formattor-job:  # jobname
+   runs-on: ubuntu-latest       # on which machine the job run
+
+   steps:
+    - name: Print  Message   #here - means array
+      run: echo "A pushed on your repo"  # element of object
+
+    - name: Check Linting
+      run : echo "Linting checked"
+    
+   
+  
