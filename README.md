@@ -22,6 +22,10 @@
 
 ### .env (sample just )
 
+
+### Github Actions
+included github actions
+
     DB_URL='mongodb+sdfasdfawrfqawe1ertwer5454634534352345'
     NODE_ENV= development
     PORT = 5000
