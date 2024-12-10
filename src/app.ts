@@ -41,10 +41,11 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(helmetConfig);
 app.use(compression(compressionOptions)); ///! used for compressing the response at large response . It will reduce the response time & size
 app.use(limiterRate); ///! for stop hacking by  limiting too much request
 
+app.use('/uploadFile', express.static(path.join(__dirname, '../uploadFile')));
+app.use(helmetConfig);
 // Application
 
 
@@ -52,7 +53,6 @@ app.use(limiterRate); ///! for stop hacking by  limiting too much request
 app.use('/api/v1', routes);
 
 app.use(express.static('uploads'));
-app.use('/uploadFile', express.static(path.join(__dirname, '../uploadFile')));
 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerApiSpecification, swaggerUiOptions));
