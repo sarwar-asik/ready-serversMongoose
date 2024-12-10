@@ -5,3 +5,7 @@ node_modules
 
 uploadFile
 dist
+logs/winston
+
+yarn.lock
+package.lock.json
