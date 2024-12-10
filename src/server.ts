@@ -34,11 +34,11 @@ async function connection() {
     app.listen(config.port, (): void => {
       config.env === 'production'
         ? logger.info(
-            `Server is listening on port ${config.port}`.red.underline.bold
-          )
+          `Server is listening on port ${config.port}`.red.underline.bold
+        )
         : console.log(
-            `Server is listening on port ${config.port}`.red.underline.bold
-          );
+          `Server is listening on port ${config.port}`.red.underline.bold
+        );
       createDirectories();
     });
   } catch (error) {
