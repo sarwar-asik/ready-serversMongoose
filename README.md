@@ -94,28 +94,45 @@ A robust and feature-rich server boilerplate built with Express.js, TypeScript, 
 ## 🔧 Environment Variables
 
 ```env
-DB_URL=mongodb+srv://[username]:[password]@[cluster].mongodb.net/[database]
+
+# Environment Configuration
 NODE_ENV=development
-PORT=5000
-JWT_SECRET=your_jwt_secret
-JWT_EXPIRES_IN=1d
-JWT_REFRESH_SECRET=your_refresh_secret
-JWT_REFRESH_EXPIRES_IN=365d
-JWT_REFRESH_EXPIRES_IN=365d
-
-SUPERADMIN_EMAIL='admin@admin.com'
-SUPERADMIN_PASSWORD='admin'
-
-
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_SERVICE=gmail
-SMTP_MAIL=your_email
-SMTP_PASSWORD=your_password
-
-STRIPE_SECRET_KEY=your_stripe_secret_key
-
+PORT=3000
+SERVER_NAME=my-server
 ALLOWED_ORIGINS=http://localhost:3000
+DB_URL=mongodb://localhost:27017/mydatabase
+TEST_DATABASE_URL=mongodb://localhost:27017/testdatabase
+HTTPS=false
+
+# JWT Configuration
+JWT_SECRET=my_jwt_secret
+JWT_EXPIRES_IN=1h
+JWT_REFRESH_SECRET=my_jwt_refresh_secret
+JWT_REFRESH_EXPIRES_IN=30d
+
+# Server Configuration
+SERVER_URL=http://localhost:3000
+
+# SMTP Configuration
+SMTP_HOST=smtp.mailtrap.io
+SMTP_PORT=2525
+SMTP_SERVICE=Mailgun
+SMTP_MAIL=example@mail.com
+SMTP_PASSWORD=my_smtp_password
+SERVICE_NAME=my_service
+
+# Stripe Configuration
+STRIPE_SECRET_KEY=stripe_secret_key
+
+# Super Admin Credentials
+SUPERADMIN_EMAIL=admin@example.com
+SUPERADMIN_PASSWORD=admin_password
+
+# S3 Configuration
+S3_ACCESS_KEY_ID=my_access_key_id
+S3_SECRET_ACCESS_KEY=my_secret_access_key
+S3_BUCKET=my_bucket_name
+S3_REGION=my_region
 
 
 ```
@@ -141,7 +158,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📝 License
 
-This project is licensed under the ISC License.
+This project is not current licensed under the ISC License.
 
 ---
 
