@@ -10,7 +10,7 @@ import { Server } from 'http';
 import { errorLogger, logger } from './shared/logger';
 import config from './config/index';
 import { createDirectories } from './utils/runFileUploadFolder';
-// import os from 'os';
+import os from 'os';
 mongoose.set('strictQuery', false);
 
 process.on('uncaughtException', error => {
@@ -20,22 +20,23 @@ process.on('uncaughtException', error => {
   process.exit(1);
 });
 
+
 let server: Server;
 
 // ! for cpu port and host
-// const protocol = config.env === 'production' && config.https ? 'https' : 'http';
-// let host = 'localhost';
+const protocol = config.env === 'production' && config.https ? 'https' : 'http';
+let host = 'localhost';
 
-// for (const iface of Object.values(os.networkInterfaces())) {
-//   if (iface) {
-//     for (const entry of iface) {
-//       if (entry.family === 'IPv4' && !entry.internal) {
-//         host = entry.address; // First non-internal IPv4 address
-//         break;
-//       }
-//     }
-//   }
-// }
+for (const iface of Object.values(os.networkInterfaces())) {
+  if (iface) {
+    for (const entry of iface) {
+      if (entry.family === 'IPv4' && !entry.internal) {
+        host = entry.address; // First non-internal IPv4 address
+        break;
+      }
+    }
+  }
+}
 // console.log(config.data_url, 'config file Data'.red.bold);
 async function connection() {
   try {
@@ -49,11 +50,11 @@ async function connection() {
     app.listen(config.port, (): void => {
       config.env === 'production'
         ? logger.info(
-          `Server is listening on port ${config.port}`.red.underline.bold
-        )
+            `The Server is listening on port ${protocol}://${host}:${config.port}`.yellow.underline.bold
+          )
         : console.log(
-          `Server is listening on port ${config.port}`.red.underline.bold
-        );
+            `The Server is listening on port ${protocol}://${host}:${config.port}`.yellow.underline.bold
+          );
       createDirectories();
     });
   } catch (error) {
