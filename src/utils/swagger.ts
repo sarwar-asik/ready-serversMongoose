@@ -1,64 +1,62 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import path from 'path';
-import schemaConverter from './schemaConverter';
-import { UserSchema } from '../app/modules/USER/user.model';
+import config from '../config';
+
+import { swaggerDefinition, swaggerTags } from './swagger.utils';
+
 
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'App Backend',
+      title: `${config.server_name} Backend`,
       version: '1.0.0',
-      description:"API Documentation ",
-      contact:{
-        name:"Sarwar Hossain",
-        email:"sarwarasik@gmail.com",
-        url:"https://www.linkedin.com/in/sarwar-asik/"
+      description: `Api Design of ${config.server_name}`,
+      contact: {
+        name: 'Sarwar Hossain [Spark Tech Agency]',
+        email: 'sarwarasik@gmail.com',
+        url: 'https://www.linkedin.com/in/sarwar-asik/',
       },
       license: {
-        name: 'Spark Tech',
+        name: 'Bd Calling IT',
         url: 'https://sparktech.agency/',
       },
     },
-       // !component part
-       components: {
-        securitySchemes: {
-          bearerAuth: {
-            type: 'http',
-            scheme: 'bearer',
-            bearerFormat: 'JWT',
-          },
-        },
-        schemas: {
-          UserSchema:schemaConverter(UserSchema), 
-        },
-        response:{
-          description: 'Access token is missing or invalid',
-          content: {
-            'application/json': {
-              example: { message: 'Unauthorized' },
-            },
-          },
-        }
+    servers: [
+      {
+        url: "http://localhost:5003",
       },
-       // !security part
-      security: [
-        {
-          bearerAuth: [],
+      {
+        url: "http://54.157.71.177:5003",
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
         },
-      ],
+      },
+      schemas: swaggerDefinition,
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    tags: swaggerTags,
   },
-  apis: [
-    path.join(__dirname, '../app/routes/*.ts'), 
-    path.join(__dirname, '../app/modules/**/*.ts'),
-    path.join(__dirname, '../app.ts'),
-  ],
+  apis: [path.join(__dirname, '../app/modules/**/*.ts')],
 };
 
 // ! swagger UI customization sections
 export const swaggerUiOptions = {
-  customSiteTitle: 'Life Sync API Docs',
-  customfavIcon:'/uploadFile/images/default/life-synce-fav.png',
+  explorer: true,
+    tagsSorter: 'alpha', // Sort tags alphabetically
+    operationsSorter: 'alpha',
+    customSiteTitle: `${config.server_name} API Docs`,
+  // customfavIcon: '/uploadFile/images/default/ready-fav.png',
   customCss: `
       .swagger-ui .topbar { 
           //  display: none !important;
@@ -73,7 +71,7 @@ export const swaggerUiOptions = {
       // display: none !important; 
     }
     .swagger-ui .topbar .topbar-wrapper::before {
-      content: 'Life Sync API Docs';
+      content: '${config.server_name} Api Design';
       color: #fff;
       font-size: 18px;
       margin:auto;
@@ -83,10 +81,13 @@ export const swaggerUiOptions = {
       text-transform: uppercase;
     }
   `,
+  docExpansion: 'none',
+  defaultModelsExpandDepth:2,
   swaggerOptions: {
-    docExpansion: 'none', // Collapses the routes by default
+    // docExpansion: 'none', // Collapses the routes by default
+    persistAuthorization: true,
+
   },
 };
+
 export const swaggerApiSpecification = swaggerJsdoc(options);
-
-

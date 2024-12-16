@@ -32,7 +32,7 @@ app.use(
           'http://127.0.0.1:3000',
           'http://192.168.0.101:3000',
         ]
-        : [''],
+        : [config.allowed_origin as string],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   })
@@ -45,6 +45,11 @@ app.use(compression(compressionOptions)); ///! used for compressing the response
 app.use(limiterRate); ///! for stop hacking by  limiting too much request
 
 app.use('/uploadFile', express.static(path.join(__dirname, '../uploadFile')));
+
+app.use(express.static('uploads'));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerApiSpecification, swaggerUiOptions));
+
 app.use(helmetConfig);
 // Application
 
@@ -52,10 +57,8 @@ app.use(helmetConfig);
 //*** */ or ***////
 app.use('/api/v1', routes);
 
-app.use(express.static('uploads'));
 
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerApiSpecification, swaggerUiOptions));
 app.use("/logs", LogsRoutes);
 
 app.get('/', async (req: Request, res: Response) => {
@@ -64,6 +67,7 @@ app.get('/', async (req: Request, res: Response) => {
     success: true,
     message: 'Running the LifeSync server.',
     statusCode: 201,
+    serverUrl: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
   }
 
   if (config.env === 'development' || req.query?.mode === "dev") {
@@ -77,7 +81,7 @@ app.get('/', async (req: Request, res: Response) => {
 
 
 
-// for unknown apiii hit error handle
+// for unknown api hit error handle
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(httpStatus.NOT_FOUND).json({
     success: false,
@@ -91,14 +95,15 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   });
   next();
 });
+
 app.use(GlobalHandler);
 
 
-const TestFunc = async () => {
-  // const testId = await generateFacultyId();
-  console.log('TestFunc from app.ts');
-};
+// const TestFunc = async () => {
+//   // const testId = await generateFacultyId();
+//   console.log('TestFunc from app.ts');
+// };
 
-TestFunc();
+// TestFunc();
 
 export default app;

@@ -10,6 +10,7 @@ import { Server } from 'http';
 import { errorLogger, logger } from './shared/logger';
 import config from './config/index';
 import { createDirectories } from './utils/runFileUploadFolder';
+// import os from 'os';
 mongoose.set('strictQuery', false);
 
 process.on('uncaughtException', error => {
@@ -21,6 +22,20 @@ process.on('uncaughtException', error => {
 
 let server: Server;
 
+// ! for cpu port and host
+// const protocol = config.env === 'production' && config.https ? 'https' : 'http';
+// let host = 'localhost';
+
+// for (const iface of Object.values(os.networkInterfaces())) {
+//   if (iface) {
+//     for (const entry of iface) {
+//       if (entry.family === 'IPv4' && !entry.internal) {
+//         host = entry.address; // First non-internal IPv4 address
+//         break;
+//       }
+//     }
+//   }
+// }
 // console.log(config.data_url, 'config file Data'.red.bold);
 async function connection() {
   try {

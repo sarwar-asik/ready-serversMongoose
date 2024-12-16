@@ -11,8 +11,12 @@ dotenv.config({ path: path.join(process.cwd(), '.env') });
 export default {
   env: process.env.NODE_ENV,
   port: process.env.PORT,
+  server_name: process.env.SERVER_NAME,
+  allowed_origin: process.env.ALLOWED_ORIGINS,
   database_url: process.env.DB_URL,
-  default_user_pass: process.env.DEFAULT_STUDENT_PASSWORD,
+  test_database_url: process.env.TEST_DATABASE_URL,
+  https:process.env.HTTPS,
+
   jwt: {
     secret: process.env.JWT_SECRET,
     expires_in: process.env.JWT_EXPIRES_IN,
@@ -27,5 +31,18 @@ export default {
     smtp_mail: process.env.SMTP_MAIL,
     smtp_password: process.env.SMTP_PASSWORD,
     NAME: process.env.SERVICE_NAME,
+  },
+  stripe: {
+    secret_key: process.env.STRIPE_SECRET_KEY,
+  },
+  superAdmin: {
+    email: process.env.SUPERADMIN_EMAIL,
+    password: process.env.SUPERADMIN_PASSWORD,
+  },
+  s3: {
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    bucket: process.env.S3_BUCKET,
+    region: process.env.S3_REGION,
   },
 };
