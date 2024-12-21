@@ -2,7 +2,9 @@ import compression, { CompressionOptions } from 'compression';
 import { Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
+import 'colors';
 
+//!  compressor
 export const compressionOptions: CompressionOptions = {
   threshold: 2048, //! Only compress responses larger than 1KB
   filter: (req: Request, res: Response) => {
@@ -14,29 +16,72 @@ export const compressionOptions: CompressionOptions = {
   },
 };
 
+// ! express-rate-limit
+type HitCountData = {
+  count: number;
+  firstHit: Date | string;
+  lastHit: Date;
+  pathCounts: { [path: string]: number };
+};
+
+const hitCounts: Record<string, HitCountData> = {};
 export const limiterRate = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-  standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-  // store: ... , // Redis, Memcached, etc. See below.
-  message: 'Too many requests, please try again later.', // Customize error message sent in response to rate limit exceeded.
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  skip: (req, res) => ['192.168.10.239'].includes(req.ip),  //those will pass through the limit request
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  limit: 300,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: {
+    statusCode: 429,
+    error: 'Too Many Requests',
+    message:
+      'You have exceeded the allowed number of requests. Please try again later.',
+  },
+  skip: (req: any) => {
+    const trustedIPs = ['192.168.12.31', '192.168.12.37', ''];
+    return trustedIPs.includes(req.ip);
+  },
+  keyGenerator: (req: any) => {
+    const ip = req.ip;
+    const path = req.path;
+    const now = new Date();
+
+    if (!hitCounts[ip]) {
+      hitCounts[ip] = {
+        count: 1,
+        firstHit: now,
+        lastHit: now,
+        pathCounts: { [path]: 1 },
+      };
+    } else {
+      hitCounts[ip].count++;
+      hitCounts[ip].lastHit = now;
+      hitCounts[ip].pathCounts[path] =
+        (hitCounts[ip].pathCounts[path] || 0) + 1;
+    }
+
+    // eslint-disable-next-line no-console
+    console.log(
+      `from ${ip} | Total: ${hitCounts[ip].count} | First: ${hitCounts[
+        ip
+      ].firstHit.toLocaleString()} | Last: ${hitCounts[
+        ip
+      ].lastHit.toLocaleTimeString()} on ${
+        hitCounts[ip].pathCounts[path]
+      } on ${path} | ${hitCounts[ip].pathCounts[path]}`.grey
+    );
+    return ip;
+  },
 });
 
-
-
-
+// !helmet config
 export const helmetConfig = helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      //   scriptSrc: ["'self'", "'unsafe-inline'", "example.com"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", 'data:'],
-      connectSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", 'https://192.168.12.31:5003'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://192.168.12.31:5003'],
+      connectSrc: ["'self'", 'https://192.168.12.31:5003'],
+      imgSrc: ["'self'", 'https://192.168.12.31:5003', 'data:'],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
@@ -44,6 +89,7 @@ export const helmetConfig = helmet({
       upgradeInsecureRequests: [],
     },
   },
+
   crossOriginEmbedderPolicy: true,
   crossOriginOpenerPolicy: { policy: 'same-origin' },
   crossOriginResourcePolicy: { policy: 'same-origin' },
@@ -65,4 +111,3 @@ export const helmetConfig = helmet({
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   xssFilter: true,
 });
-
