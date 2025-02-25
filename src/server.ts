@@ -23,6 +23,10 @@ process.on('uncaughtException', error => {
 
 let server: Server;
 
+// Initialize the server variable with a value
+// eslint-disable-next-line prefer-const
+server = new Server();
+
 // ! for cpu port and host
 const protocol = config.env === 'production' && config.https ? 'https' : 'http';
 let host = 'localhost';
@@ -44,17 +48,17 @@ async function connection() {
       dbName: 'Ready-Server',
     });
     config.env === 'production'
-      ? logger.info(`Database connection successful`.green.underline.bold)
-      : console.log(`Database connection successful`.green.underline.bold);
+      ? logger.info(`Database connection successful.`.green.underline.bold)
+      : console.log(`Database connection successful.`.green.underline.bold);
 
     app.listen(config.port, (): void => {
       config.env === 'production'
         ? logger.info(
-            `The Server is listening on port ${protocol}://${host}:${config.port}`.yellow.underline.bold
-          )
+          `The Server is listening on port ${protocol}://${host}:${config.port}`.yellow.underline.bold
+        )
         : console.log(
-            `The Server is listening on port ${protocol}://${host}:${config.port}`.yellow.underline.bold
-          );
+          `The Server is listening on port ${protocol}://${host}:${config.port}`.yellow.underline.bold
+        );
       createDirectories();
     });
   } catch (error) {

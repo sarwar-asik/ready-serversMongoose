@@ -1,15 +1,29 @@
-FROM node:20  
-#  
-
+FROM node:22  AS builder
+# RUN apk add --no-cache python3 make g++ 
 WORKDIR /app
-COPY package.json yarn.lock ./
 
+COPY package.json  ./
+
+# RUN yarn cache clean
+RUN npm cache clean --force
+
+# RUN yarn install --frozen-lockfile
+# RUN npm install --production
 RUN npm install
 
 COPY . .
 
-# VOLUME [ "/logs" ]
+# RUN yarn build
+RUN npm run build
 
-EXPOSE 5000
+FROM node:22 
 
-CMD ["npm","run","dev"]
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY . /app
+
+EXPOSE 5002
+
+CMD ["npm", "start"]

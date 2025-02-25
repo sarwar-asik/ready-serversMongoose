@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  map-point-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002" # Match the PORT from your .env file
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env # Specify your .env file
+    command: npm run start # Or your relevant start script
