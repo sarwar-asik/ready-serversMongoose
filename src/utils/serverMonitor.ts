@@ -254,7 +254,7 @@ function generateServerMetadata(): {
   // console.log(uptimeSeconds,'uptimeSeconds')
   const speedReadable = `${os.cpus()[0].speed} MHz`;
   return {
-    cpuName:os.cpus()[0].model +" -"+ hostname,
+    cpuName:hostname +" -"+ os.cpus()[0].model ,
     speed:speedReadable,
     uptime: formatUptime(uptimeSeconds),
     lastUpdate: formatTimeAgo(lastUpdateTime)
@@ -560,10 +560,18 @@ async function serverMonitorPage(
                     <h1>SYSTEM MONITOR_</h1>
                     <div class="server-status">
                         <span class="status-dot"></span>
-                        ONLINE
+                        <span>ONLINE</span>
                     </div>
                 </div>
                 <p style="text-transform: uppercase;">${config?.server_name}</p>
+
+           
+                <p 
+                style="margin-top: 1rem; background-color: #85EA2D; padding: .25rem .5rem; border-radius: .25rem; text-align:center;"
+                ><a 
+                style="text-decoration: none; color: black;" 
+                href="/api-docs" target="_blank"
+                >Explore Swagger API Docs</a></p>
                 
                 <div class="header-meta">
                     <div class="meta-item">
