@@ -23,7 +23,7 @@ const getSingleUser = async (id: string): Promise<IUser | null> => {
 
 const deleteUser = async (id: string): Promise<IUser | null> => {
   const result = await User.findByIdAndDelete(id)
-  
+
   return result;
 };
 
@@ -39,7 +39,7 @@ const updateUser = async (
 };
 
 
-const myProfileServices = async (id: string): Promise< Partial<IUser> | null> => {
+const myProfileServices = async (id: string): Promise<Partial<IUser> | null> => {
   const result = await User.findById(id).select('name phoneNumber address')
 
   return result;
@@ -57,15 +57,15 @@ const updateMyProfile = async (
   const result = await User.findOneAndUpdate({ _id: id }, payload, {
     new: true,
   });
-  let responseData =null
-  if(result){
-    responseData= {
-      name:result?.name,
-      phoneNumber:result?.phoneNumber,
-      address:result?.address
+  let responseData = null
+  if (result) {
+    responseData = {
+      name: result?.name,
+      phoneNumber: result?.phoneNumber,
+      address: result?.address
     }
   }
   return responseData;
 };
 
-export const UserService = { createUserServices, getSingleUser ,deleteUser,updateUser,myProfileServices ,updateMyProfile} ;
+export const UserService = { createUserServices, getSingleUser, deleteUser, updateUser, myProfileServices, updateMyProfile };

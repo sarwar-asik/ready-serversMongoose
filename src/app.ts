@@ -20,6 +20,7 @@ import path from "path";
 import swaggerUi from 'swagger-ui-express';
 import { swaggerApiSpecification, swaggerUiOptions } from './utils/swagger';
 import { LogsRoutes } from './app/modules/logs/logs.routes';
+import serverMonitorPage from './utils/serverMonitor';
 const app: Application = express();
 // const port = 3000
 
@@ -53,9 +54,24 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerApiSpecification, s
 app.use(helmetConfig);
 // Application
 
+const responseTimes:any = [];
+const responseTimeLogger = (req:Request, res:Response, next:NextFunction) => {
+  const startTime = performance.now();
+
+  res.on("finish", () => {
+    const endTime = performance.now();
+    const elapsedTime = endTime - startTime;
+    const label = elapsedTime >= 1000 ? "High" : elapsedTime >= 500 ? "Medium" : "Low";
+    responseTimes.push({ route: req.path, time: elapsedTime.toFixed(2), label });
+  });
+  next();
+};
+
+// Initialize API routes
+app.use("/api/v1", responseTimeLogger, routes);
 
 //*** */ or ***////
-app.use('/api/v1', routes);
+// app.use('/api/v1', routes);
 
 
 
@@ -75,7 +91,9 @@ app.get('/', async (req: Request, res: Response) => {
     responseData.logsError = `http://localhost:${config.port}/logs/errors`;
     responseData.logsSuccess = `http://localhost:${config.port}/logs/successes`;
   }
-  res.json(responseData);
+  // res.json(responseData);
+
+  res.send(await serverMonitorPage(req,responseTimes))
   // next();
 });
 
