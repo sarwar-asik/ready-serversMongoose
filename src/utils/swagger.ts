@@ -18,7 +18,7 @@ const options: swaggerJsdoc.Options = {
         url: 'https://www.linkedin.com/in/sarwar-asik/',
       },
       license: {
-        name: 'Bd Calling IT',
+        name: 'Company',
         url: 'https://sparktech.agency/',
       },
     },
