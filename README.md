@@ -32,6 +32,10 @@ A robust and feature-rich server boilerplate built with Express.js, TypeScript, 
 - 🎯 TypeScript support
 - 🎨 Prettier code formatting
 
+### Advance features
+- explore swagger docs by `/api-docs` .
+- use ready cli by `npm install -g .` and  `tran`
+
 ## 🛠️ Technologies
 
 - **Runtime**: Node.js
@@ -53,6 +57,7 @@ A robust and feature-rich server boilerplate built with Express.js, TypeScript, 
 - Microservices
 - Authentication services
 - User management systems
+
 
 ## 🚀 Getting Started
 
@@ -155,6 +160,8 @@ src/
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+
 
 ## 📝 License
 
