@@ -1,16 +1,14 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-console */
 import mongoose from 'mongoose';
-// import config from './config/index.js';
 import 'colors';
-// import { logger, errorLogger } from './shared/logger';
 import app from './app';
 import { Server } from 'http';
-// import config from './config';
 import { errorLogger, logger } from './shared/logger';
 import config from './config/index';
 import { createDirectories } from './utils/runFileUploadFolder';
 import os from 'os';
+import { updateServerTime } from './utils/serverMonitor';
 mongoose.set('strictQuery', false);
 
 process.on('uncaughtException', error => {
@@ -28,39 +26,38 @@ let server: Server;
 server = new Server();
 
 // ! for cpu port and host
-const protocol = config.env === 'production' && config.https ? 'https' : 'http';
-let host = 'localhost';
+server = app.listen(config.port || 5002 as any, '0.0.0.0', (): void => {
+  updateServerTime();
+  const protocol = config.env === 'production' && config.https ? 'https' : 'http';
+  let host = '0.0.0.0';
 
-for (const iface of Object.values(os.networkInterfaces())) {
-  if (iface) {
-    for (const entry of iface) {
-      if (entry.family === 'IPv4' && !entry.internal) {
-        host = entry.address; // First non-internal IPv4 address
-        break;
-      }
+  // Get the actual IP address for display purposes
+  const networks = os.networkInterfaces();
+  const network = networks['Ethernet'] || networks['Wi-Fi'] || networks['eth0'] || networks['wlan0'];
+
+  if (network) {
+    const ipv4 = network.find(ip => ip.family === 'IPv4' && !ip.internal);
+    if (ipv4) {
+      host = ipv4.address;
     }
   }
-}
+
+  config.env === 'production'
+    ? logger.info(`Server running on ${protocol}://${host}:${config.port || 5002}`.yellow.underline.bold)
+    : console.log(`Server running on ${protocol}://${host}:${config.port || 5002}`.yellow.underline.bold);
+
+  createDirectories();
+});
+
 // console.log(config.data_url, 'config file Data'.red.bold);
 async function connection() {
   try {
     await mongoose.connect(config.database_url as string, {
-      dbName: 'Ready-Server',
+      dbName: `${config.server_name}-DB`,
     });
     config.env === 'production'
       ? logger.info(`Database connection successful.`.green.underline.bold)
       : console.log(`Database connection successful.`.green.underline.bold);
-
-    app.listen(config.port, (): void => {
-      config.env === 'production'
-        ? logger.info(
-          `The Server is listening on port ${protocol}://${host}:${config.port}`.yellow.underline.bold
-        )
-        : console.log(
-          `The Server is listening on port ${protocol}://${host}:${config.port}`.yellow.underline.bold
-        );
-      createDirectories();
-    });
   } catch (error) {
     config.env === 'production'
       ? errorLogger.error(`Failed to connect database: ${error}`.red.bold)
