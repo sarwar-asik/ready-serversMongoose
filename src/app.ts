@@ -24,20 +24,29 @@ import serverMonitorPage from './utils/serverMonitor';
 const app: Application = express();
 // const port = 3000
 
-app.use(
+const allowedOrigins = (config?.allowed_origin|| '').split(',');
+app.use((req, res, next) => {
+  const origin = req.headers.origin as string;
+
+  if (origin && !allowedOrigins.includes(origin)) {
+    allowedOrigins.push(origin); // Dynamically add new origin if not already in the list
+  }
+
   cors({
-    origin:
-      config.env === 'development'
-        ? [
-          'http://localhost:3000',
-          'http://127.0.0.1:3000',
-          'http://192.168.0.101:3000',
-        ]
-        : [config.allowed_origin as string],
-    credentials: true,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true); // Allow origin
+      } else {
+        callback(new Error(`Not allowed by CORS: ${origin}`)); // Block origin
+      }
+    },
+    credentials: true, // Allow credentials like cookies
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  })
-);
+    optionsSuccessStatus: 200,
+  })(req, res, next); // Call CORS middleware dynamically
+});
+
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -69,6 +78,9 @@ const responseTimeLogger = (req:Request, res:Response, next:NextFunction) => {
 
 // Initialize API routes
 app.use("/api/v1", responseTimeLogger, routes);
+app.get('/api-docs-json', (req, res) => {
+  res.json(swaggerApiSpecification);
+});
 
 //*** */ or ***////
 // app.use('/api/v1', routes);
