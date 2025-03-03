@@ -5,8 +5,6 @@ import express, { Application, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import GlobalHandler from './app/middlesWare/globalErrorHandler';
 import routes from './app/routes';
-// import sendResponse from './shared/sendResponce';
-// import { generateFacultyId } from './app/modules/users/user.utils';
 import cookieParser from 'cookie-parser';
 import config from './config';
 import compression from 'compression';
@@ -15,16 +13,15 @@ import {
   helmetConfig,
   limiterRate,
 } from './config/expressMiddleware.config';
-// import { createUser } from './app/modules/users/users.services'
 import path from "path";
 import swaggerUi from 'swagger-ui-express';
 import { swaggerApiSpecification, swaggerUiOptions } from './utils/swagger';
 import { LogsRoutes } from './app/modules/logs/logs.routes';
 import serverMonitorPage from './utils/serverMonitor';
 const app: Application = express();
-// const port = 3000
 
-const allowedOrigins = (config?.allowed_origin|| '').split(',');
+
+const allowedOrigins = (config?.allowed_origin || '').split(',');
 app.use((req, res, next) => {
   const origin = req.headers.origin as string;
 
@@ -63,8 +60,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerApiSpecification, s
 app.use(helmetConfig);
 // Application
 
-const responseTimes:any = [];
-const responseTimeLogger = (req:Request, res:Response, next:NextFunction) => {
+const responseTimes: any = [];
+const responseTimeLogger = (req: Request, res: Response, next: NextFunction) => {
   const startTime = performance.now();
 
   res.on("finish", () => {
@@ -105,7 +102,7 @@ app.get('/', async (req: Request, res: Response) => {
   }
   // res.json(responseData);
 
-  res.send(await serverMonitorPage(req,responseTimes))
+  res.send(await serverMonitorPage(req, responseTimes))
   // next();
 });
 
@@ -128,12 +125,5 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use(GlobalHandler);
 
-
-// const TestFunc = async () => {
-//   // const testId = await generateFacultyId();
-//   console.log('TestFunc from app.ts');
-// };
-
-// TestFunc();
 
 export default app;

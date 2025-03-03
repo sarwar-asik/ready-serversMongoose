@@ -1,9 +1,9 @@
+import dotenv from 'dotenv';
+import { Request } from 'express';
 import * as fs from 'fs';
-import * as path from 'path';
 import * as os from 'os';
 import * as osUtils from 'os-utils';
-import { Request } from 'express';
-import dotenv from 'dotenv';
+import * as path from 'path';
 import config from '../config';
 import { listLogFiles } from '../helpers/listLogFiles';
 
@@ -165,9 +165,8 @@ function generateResponseTimesTable(responseTimes: ResponseTime[]): string {
         <td>${entry.route}</td>
         <td>GET</td>
         <td>${entry.time}ms</td>
-        <td><span class="status ${statusClass}"></span>${
-      entry.label === 'High' ? 'Warning' : 'OK'
-    }</td>
+        <td><span class="status ${statusClass}"></span>${entry.label === 'High' ? 'Warning' : 'OK'
+      }</td>
       </tr>
     `;
   });
@@ -220,44 +219,54 @@ function formatUptime(uptimeInSeconds: number): string {
   return `${days}d ${hours}h ${minutes}m`;
 }
 
+
+let lastServerUpdateTime = new Date();
+export function updateServerTime() {
+  lastServerUpdateTime = new Date();
+}
 // Function to format time ago
 function formatTimeAgo(date: Date): string {
+  /// console.log(date, 'dddddddddddd')
+  /// console.log(date.getTime(), 'date.getTime()')
   const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-  
+  // console.log(seconds, 'seconds')
+
   if (seconds < 60) return `${seconds}s ago`;
   if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
   if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+  /// console.log(`${Math.floor(seconds / 86400)}d ago`)
   return `${Math.floor(seconds / 86400)}d ago`;
 }
 
+
 // Function to generate server metadata
-function generateServerMetadata(): { 
-  cpuName: string; 
-  speed: string; 
-  uptime: string; 
-  lastUpdate: string; 
+function generateServerMetadata(): {
+  cpuName: string;
+  speed: string;
+  uptime: string;
+  lastUpdate: string;
 } {
   const hostname = os.hostname();
   // console.log(hostname,'hostname')
   const uptimeSeconds = os.uptime();
- 
+
   // console.log(os.machine(),"machine",os.cpus()[0].model,"cpuModel",os.cpus()[0].speed,"cpuSpeed",os.cpus()[0].times,"cpuTimes")
 
-  const lastUpdateTime = new Date(); // You can store this in a variable and update it when server state changes
+  // You can store this in a variable and update it when server state changes
 
   // Generate a consistent server ID based on hostname
   // const serviceID = `PRD-${hostname.slice(0, 3).toUpperCase()}-${Math.abs(hostname.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % 1000).toString().padStart(3, '0')}`;
-  
+
   // Get speed from environment or default
 
 
   // console.log(uptimeSeconds,'uptimeSeconds')
   const speedReadable = `${os.cpus()[0].speed} MHz`;
   return {
-    cpuName:hostname +" -"+ os.cpus()[0].model ,
-    speed:speedReadable,
+    cpuName: hostname + " -" + os.cpus()[0].model,
+    speed: speedReadable,
     uptime: formatUptime(uptimeSeconds),
-    lastUpdate: formatTimeAgo(lastUpdateTime)
+    lastUpdate: formatTimeAgo(lastServerUpdateTime)
   };
 }
 
@@ -510,7 +519,7 @@ async function serverMonitorPage(
             text-transform: uppercase;
             letter-spacing: 0.1em;
             font-size: 0.875rem;
-            color: #6EC531;
+            color: #85EA2D;
           }
 
           .status-success { background: #00ff88; box-shadow: 0 0 10px #00ff88; }
@@ -560,18 +569,16 @@ async function serverMonitorPage(
                     <h1>SYSTEM MONITOR_</h1>
                     <div class="server-status">
                         <span class="status-dot"></span>
-                        <span>ONLINE</span>
+                        <span>RUNNING.....</span>
                     </div>
                 </div>
                 <p style="text-transform: uppercase;">${config?.server_name}</p>
 
            
-                <p 
-                style="margin-top: 1rem; background-color: #85EA2D; padding: .25rem .5rem; border-radius: .25rem; text-align:center;"
-                ><a 
-                style="text-decoration: none; color: black;" 
+              <a 
+                style="text-decoration: none; color: black; margin-top: 1rem; background-color: #85EA2D; padding: .25rem .5rem; border-radius: .25rem; text-align:center;" 
                 href="/api-docs" target="_blank"
-                >Explore Swagger API Docs</a></p>
+                >Explore Swagger API Docs</a>
                 
                 <div class="header-meta">
                     <div class="meta-item">
