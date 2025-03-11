@@ -3,8 +3,12 @@ import dotenv from 'dotenv';
 import path from 'path';
 // dotenv.config({path:process.cwd()})
 
+
+const envPath = process.env.NODE_ENV === 'development' ? path.join(process.cwd(), '.env') : path.join(process.cwd(), '.env.production')
+
+
 // dotenv.config({ path: path.join(process.cwd(), "env") });
-dotenv.config({ path: path.join(process.cwd(), '.env') });
+dotenv.config({ path: envPath });
 
 // console.log(process.env);
 
@@ -15,7 +19,7 @@ export default {
   allowed_origin: process.env.ALLOWED_ORIGINS,
   database_url: process.env.DB_URL,
   test_database_url: process.env.TEST_DATABASE_URL,
-  https:process.env.HTTPS,
+  https: process.env.HTTPS,
 
   jwt: {
     secret: process.env.JWT_SECRET,
