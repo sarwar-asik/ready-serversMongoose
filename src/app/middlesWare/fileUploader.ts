@@ -75,8 +75,8 @@ const fileFilterFun = (req: Request, file: any, cb: FileFilterCallback) => {
     cb(
       new Error(
         'Only ' +
-          allowedMimeTypes.map(type => type.split('/')[1]).join(', ') +
-          'format is allowed!'
+        allowedMimeTypes.map(type => type.split('/')[1]).join(', ') +
+        'format is allowed!'
       )
     );
   }

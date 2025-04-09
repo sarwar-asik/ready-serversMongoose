@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import httpStatus from 'http-status';
 // const express = require('express')
-import express, { Application, NextFunction, Request, Response } from 'express';
+import express, { Application, NextFunction, Request, RequestHandler, Response } from 'express';
 import cors from 'cors';
 import GlobalHandler from './app/middlesWare/globalErrorHandler';
 import routes from './app/routes';
@@ -29,6 +29,8 @@ app.use((req, res, next) => {
     allowedOrigins.push(origin); // Dynamically add new origin if not already in the list
   }
 
+
+
   cors({
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
@@ -48,14 +50,17 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(compression(compressionOptions)); ///! used for compressing the response at large response . It will reduce the response time & size
+app.use(compression(compressionOptions) as unknown as RequestHandler); // Compress all routes
+
+
+
 app.use(limiterRate); ///! for stop hacking by  limiting too much request
 
 app.use('/uploadFile', express.static(path.join(__dirname, '../uploadFile')));
 
 app.use(express.static('uploads'));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerApiSpecification, swaggerUiOptions));
+app.use('/api-docs', swaggerUi.serve as unknown as RequestHandler, swaggerUi.setup(swaggerApiSpecification, swaggerUiOptions) as unknown as RequestHandler);
 
 app.use(helmetConfig);
 // Application

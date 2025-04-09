@@ -13,13 +13,13 @@ const options: swaggerJsdoc.Options = {
       version: '1.0.0',
       description: `Api Design of ${config.server_name}`,
       contact: {
-        name: 'Sarwar Hossain [Spark Tech Agency]',
+        name: 'Sarwar Hossain [Star Connect]',
         email: 'sarwarasik@gmail.com',
         url: 'https://www.linkedin.com/in/sarwar-asik/',
       },
       license: {
         name: 'Company',
-        url: 'https://sparktech.agency/',
+        url: 'https://dev.starconnect.com',
       },
     },
     servers: [
@@ -53,9 +53,9 @@ const options: swaggerJsdoc.Options = {
 // ! swagger UI customization sections
 export const swaggerUiOptions = {
   explorer: true,
-    tagsSorter: 'alpha', // Sort tags alphabetically
-    operationsSorter: 'alpha',
-    customSiteTitle: `${config.server_name} API Docs`,
+  tagsSorter: 'alpha', // Sort tags alphabetically
+  operationsSorter: 'alpha',
+  customSiteTitle: `${config.server_name} API Docs`,
   // customfavIcon: '/uploadFile/images/default/ready-fav.png',
   customCss: `
       .swagger-ui .topbar { 
@@ -82,7 +82,7 @@ export const swaggerUiOptions = {
     }
   `,
   docExpansion: 'none',
-  defaultModelsExpandDepth:2,
+  defaultModelsExpandDepth: 2,
   swaggerOptions: {
     // docExpansion: 'none', // Collapses the routes by default
     persistAuthorization: true,

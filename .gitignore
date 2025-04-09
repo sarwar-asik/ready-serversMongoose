@@ -1,5 +1,10 @@
 node_modules
 
+yarn.lock
+package.lock.json
+package-lock.json
+yarn-error.log
+
 .env
 .vercel
 
@@ -7,5 +12,3 @@ uploadFile
 dist
 logs/winston
 
-yarn.lock
-package.lock.json

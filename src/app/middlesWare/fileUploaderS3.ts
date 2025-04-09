@@ -61,7 +61,7 @@ const fileLocalStorage: StorageEngine = multer.diskStorage({
 
 // Define the S3 storage engine
 const fileS3Storage = multerS3({
-  s3: s3Config,
+  s3: s3Config as any,
   bucket: config.s3.bucket as string,
   contentType: multerS3.AUTO_CONTENT_TYPE,
   metadata: (req: Request, file: Express.Multer.File, cb) => {
@@ -103,8 +103,8 @@ const fileFilterFun = (req: Request, file: any, cb: FileFilterCallback) => {
     cb(
       new Error(
         'Only ' +
-          allowedMimeTypes.map(type => type.split('/')[1]).join(', ') +
-          ' formats are allowed!'
+        allowedMimeTypes.map(type => type.split('/')[1]).join(', ') +
+        ' formats are allowed!'
       )
     );
   }
