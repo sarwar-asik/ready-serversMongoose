@@ -18,7 +18,7 @@ export const UserSchema: Schema<IUser> = new Schema<IUser>(
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
     },
-    phoneNumber: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
     address: { type: String, required: true },
     budget: {
       type: Number,
@@ -42,12 +42,12 @@ export const UserSchema: Schema<IUser> = new Schema<IUser>(
 );
 
 UserSchema.statics.isUserExistsMethod = async function (
-  phoneNumber: string
-): Promise<Pick<IUser, 'password' | 'role' | 'phoneNumber'> | null> {
+  email: string
+): Promise<Pick<IUser, 'password' | 'role' | 'email'> | null> {
   // console.log("hitted isUserExistsMethod");
   const user = await User.findOne(
-    { phoneNumber },
-    { phoneNumber: 1, password: 1, role: 1, _id: 1 }
+    { email },
+    { email: 1, password: 1, role: 1, _id: 1 }
   );
   return user;
 };

@@ -15,8 +15,7 @@ export default {
   allowed_origin: process.env.ALLOWED_ORIGINS,
   database_url: process.env.DB_URL,
   test_database_url: process.env.TEST_DATABASE_URL,
-  https:process.env.HTTPS,
-
+  https: process.env.HTTPS,
   jwt: {
     secret: process.env.JWT_SECRET,
     expires_in: process.env.JWT_EXPIRES_IN,

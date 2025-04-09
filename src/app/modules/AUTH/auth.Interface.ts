@@ -1,5 +1,5 @@
 export type ILogin = {
-  phoneNumber: string;
+  email: string;
   password: string;
 };
 

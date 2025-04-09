@@ -40,7 +40,7 @@ const updateUser = async (
 
 
 const myProfileServices = async (id: string): Promise<Partial<IUser> | null> => {
-  const result = await User.findById(id).select('name phoneNumber address')
+  const result = await User.findById(id).select('name email address')
 
   return result;
 };
@@ -61,7 +61,7 @@ const updateMyProfile = async (
   if (result) {
     responseData = {
       name: result?.name,
-      phoneNumber: result?.phoneNumber,
+      email: result?.email,
       address: result?.address
     }
   }

@@ -1,21 +1,18 @@
 import mongoose from "mongoose";
 import { IGenericErrorMessage } from "../interfaces/Ierror";
 
-const handleCastError =(error:mongoose.Error.CastError)=>{
-
-
-    const errors:IGenericErrorMessage[] =[
+const handleCastError = (error: mongoose.Error.CastError) => {
+    const errors: IGenericErrorMessage[] = [
         {
-            path:error.path,
-            message:error.message
+            path: error.path,
+            message: error.message
         }
-    ] 
-
-    const statusCode =400;
+    ]
+    const statusCode = 400;
     return {
-         statusCode,
-         message:"CastError Error",
-         errorMessages:errors
+        statusCode,
+        message: "CastError Occurred for this route",
+        errorMessages: errors
     }
 }
 

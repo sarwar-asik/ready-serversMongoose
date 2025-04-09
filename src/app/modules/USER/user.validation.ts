@@ -5,8 +5,8 @@ const createUserZodSchema = z.object({
     role: z.string({
       required_error: 'role is required',
     }),
-    phoneNumber: z.string({
-      required_error: 'PhoneNumber is required',
+    email: z.string({
+      required_error: 'email is required',
     }),
     address: z.string({
       required_error: 'Address is required',
@@ -18,33 +18,7 @@ const createUserZodSchema = z.object({
   }),
 });
 
-
-
-const updateUserZodSchema = z.object({
-  body: z.object({
-    role: z
-      .string({
-        required_error: 'role is required',
-      })
-      .optional(),
-    phoneNumber: z
-      .string({
-        required_error: 'PhoneNumber is required',
-      })
-      .optional(),
-    address: z
-      .string({
-        required_error: 'Address is required',
-      })
-      .optional(),
-    name: z
-      .object({
-        firstName: z.string(),
-        lastName: z.string().optional(),
-      })
-      .optional(),
-  }),
-});
+const updateUserZodSchema = createUserZodSchema.shape.body.partial()
 
 export const UserValidation = {
   createUserZodSchema,

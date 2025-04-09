@@ -17,9 +17,9 @@ import { User } from '../USER/user.model';
 import { IUser } from '../USER/user.interface';
 
 const authLoginServices = async (payload: ILogin): Promise<ILoginResponse> => {
-  const { phoneNumber, password } = payload;
+  const { email, password } = payload;
 
-  const isUserExist = await User.isUserExistsMethod(phoneNumber);
+  const isUserExist = await User.isUserExistsMethod(email);
   // console.log(isUserExist,"isUserExits");
 
   if (!isUserExist) {
@@ -35,17 +35,17 @@ const authLoginServices = async (payload: ILogin): Promise<ILoginResponse> => {
 
   // console.log(isUserExist,"isUserExist");
 
-  const { role, _id, phoneNumber: existphoneNumber } = isUserExist;
+  const { role, _id, email: existemail } = isUserExist;
   //   jwt part ///
   const accessToken = jwtHelpers.createToken(
-    { _id, role, phoneNumber: existphoneNumber },
+    { _id, role, email: existemail },
 
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
 
   const refreshToken = jwtHelpers.createToken(
-    { _id, role, phoneNumber: existphoneNumber },
+    { _id, role, email: existemail },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
@@ -83,10 +83,10 @@ const refreshTokenServices = async (
     throw new ApiError(httpStatus.FORBIDDEN, 'Invalid your refreshToken');
   }
 
-  const { phoneNumber, role, _id } = verifiedToken;
+  const { email, role, _id } = verifiedToken;
 
   const newAccessToken = jwtHelpers.createToken(
-    { role, _id, phoneNumber },
+    { role, _id, email },
     config.jwt.refresh_secret as Secret,
     config.jwt.expires_in as string
   );
