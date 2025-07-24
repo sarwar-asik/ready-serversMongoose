@@ -1,71 +1,53 @@
-/* eslint-disable no-console */
+import { FilterQuery } from 'mongoose';
 import { User } from './user.model';
 import { IUser } from './user.interface';
-
 import ApiError from '../../../errors/ApiError';
+import httpStatus from 'http-status';
 
-const createUserServices = async (user: IUser): Promise<IUser | null> => {
-  // console.log(user, 'from services');
-
-  const createdUser = await User.create(user);
-  if (!createdUser) {
-    throw new ApiError(400, 'Failed to create new User');
-  }
-  return createdUser;
-  // return null
-};
-
-const getSingleUser = async (id: string): Promise<IUser | null> => {
-  const result = await User.findById(id);
-
-  return result;
-};
-
-const deleteUser = async (id: string): Promise<IUser | null> => {
-  const result = await User.findByIdAndDelete(id)
-
-  return result;
-};
-
-const updateUser = async (
-  id: string,
-  payload: Partial<IUser>
-): Promise<IUser | null> => {
-
-  const result = await User.findOneAndUpdate({ _id: id }, payload, {
-    new: true,
-  });
-  return result;
-};
-
-
-const myProfileServices = async (id: string): Promise<Partial<IUser> | null> => {
-  const result = await User.findById(id).select('name email address')
-
-  return result;
-};
-
-
-
-const updateMyProfile = async (
-  id: string,
-  payload: Partial<IUser>
-): Promise<Partial<IUser> | null> => {
-  console.log(payload);
-
-
-  const result = await User.findOneAndUpdate({ _id: id }, payload, {
-    new: true,
-  });
-  let responseData = null
-  if (result) {
-    responseData = {
-      name: result?.name,
-      email: result?.email,
-      address: result?.address
+export class UserService {
+  public async create(user: IUser): Promise<IUser> {
+    const createdUser = await User.create(user);
+    if (!createdUser) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create user');
     }
+    return createdUser;
   }
-  return responseData;
-};
 
-export const UserService = { createUserServices, getSingleUser, deleteUser, updateUser, myProfileServices, updateMyProfile };
+  public async getById(id: string): Promise<IUser | null> {
+    return User.findById(id);
+  }
+
+  public async getAll(filter: FilterQuery<IUser> = {}): Promise<IUser[]> {
+    return User.find(filter);
+  }
+
+  /**
+   * Update a user by ID.
+   */
+  public async updateUser(
+    id: string,
+    payload: Partial<IUser>,
+  ): Promise<IUser | null> {
+    const updatedUser = await User.findByIdAndUpdate(id, payload, {
+      new: true,
+    });
+    if (!updatedUser) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+    return updatedUser;
+  }
+
+  /**
+   * Delete a user by ID.
+   */
+  public async deleteUser(id: string): Promise<IUser | null> {
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+    return deletedUser;
+  }
+}
+
+// Singleton instance for usage
+export const userService = new UserService();

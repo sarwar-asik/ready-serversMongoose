@@ -2,30 +2,28 @@ import express from 'express';
 
 import validateRequest from '../../middlesWare/validateUserRequest';
 import { AuthValidation } from './auth.validation';
-import { authController, signUpAuthController } from './auth.controller';
+import { authController } from './auth.controller';
 
-import { UserValidation } from '../USER/user.validation';
+import { UserValidation } from '../user/user.validation';
 
 const router = express.Router();
 
 router.post(
   '/signup',
   validateRequest(UserValidation.createUserZodSchema),
-  signUpAuthController
+  authController.signUp,
 );
 router.post(
   '/login',
   validateRequest(AuthValidation.createUserZodSchema),
-  authController.loginController
+  authController.login,
 );
 
 router.post(
   '/refresh-token',
   validateRequest(AuthValidation.refreshTokenZodSchema),
-  authController.refreshTokenController
+  authController.refreshToken,
 );
-
-
 
 /**
  * @swagger

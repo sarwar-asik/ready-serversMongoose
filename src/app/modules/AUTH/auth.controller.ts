@@ -1,53 +1,42 @@
 /* eslint-disable no-console */
 import { Request, Response } from 'express';
-
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponce';
-
 import config from '../../../config';
 import { IRefreshTokenResponse } from './auth.Interface';
-import { authServices, signUpServices } from './auth.sevices';
 import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
+import { authService } from './auth.sevices';
 
-const loginController = catchAsync(async (req: Request, res: Response) => {
-  const { ...loginData } = req.body;
+class AuthController {
+  login = catchAsync(async (req: Request, res: Response) => {
+    const loginData = { ...req.body };
+    const result = await authService.login(loginData);
 
-  // console.log(loginData,"asdfsd");
+    const { refreshToken, ...others } = result;
 
-  const result = await authServices.authLoginServices(loginData);
+    const cookieOptions = {
+      secure: config.env === 'production',
+      httpOnly: true,
+    };
 
-  const { refreshToken, ...others } = result;
+    res.cookie('refreshToken', refreshToken, cookieOptions);
 
-  const cookieOption = {
-    secure: config.env === 'production',
-    httpOnly: true,
-  };
-
-  res.cookie('refreshToken', refreshToken, cookieOption);
-
-  if (result) {
     sendResponse(res, {
       success: true,
-      message: 'successfully User Login',
+      message: 'Successfully logged in',
       statusCode: 200,
       data: others,
     });
-  }
-});
+  });
 
-const refreshTokenController = catchAsync(
-  async (req: Request, res: Response) => {
+  refreshToken = catchAsync(async (req: Request, res: Response) => {
     const refreshToken = req.headers.authorization;
-    // const { refreshToken } = req.cookies;
-
     if (!refreshToken) {
       throw new ApiError(httpStatus.UNAUTHORIZED, `You are not authorized`);
     }
 
-    const result = await authServices.refreshTokenServices(refreshToken);
-
-    // set refresh token into cookie
+    const result = await authService.refreshToken(refreshToken);
 
     const cookieOptions = {
       secure: config.env === 'production',
@@ -59,32 +48,22 @@ const refreshTokenController = catchAsync(
     sendResponse<IRefreshTokenResponse>(res, {
       statusCode: 200,
       success: true,
-      message: 'User lohggedin successfully !',
+      message: 'User logged in successfully!',
       data: result || null,
     });
-  }
-);
+  });
 
-export const signUpAuthController = catchAsync(
-  async (req: Request, res: Response) => {
-    const { ...user } = req.body;
-    // console.log(user, 'from controller=================');
+  signUp = catchAsync(async (req: Request, res: Response) => {
+    const user = { ...req.body };
+    const result = await authService.signUp(user);
 
-    const result = await signUpServices(user);
-    if (result) {
-      sendResponse(res, {
-        success: true,
-        message: 'successfully create User',
-        statusCode: 200,
-        data: result,
-      });
-      // next()
-    }
-  }
-);
+    sendResponse(res, {
+      success: true,
+      message: 'Successfully created user',
+      statusCode: 200,
+      data: result,
+    });
+  });
+}
 
-export const authController = {
-  loginController,
-  refreshTokenController,
-  signUpAuthController,
-};
+export const authController = new AuthController();

@@ -1,93 +1,141 @@
-import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerJsdoc, { Options, Tag } from 'swagger-jsdoc';
 import path from 'path';
 import config from '../config';
-
 import { swaggerDefinition, swaggerTags } from './swagger.utils';
 
+interface SwaggerConfig {
+  serverName: string;
+  version?: string;
+  description?: string;
+  contact?: {
+    name: string;
+    email: string;
+    url: string;
+  };
+  license?: {
+    name: string;
+    url: string;
+  };
+  servers: { url: string }[];
+  swaggerDefinition: Record<string, unknown>;
+  swaggerTags: Tag[];
+}
 
-const options: swaggerJsdoc.Options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: `${config.server_name} Backend`,
-      version: '1.0.0',
-      description: `Api Design of ${config.server_name}`,
-      contact: {
-        name: 'Sarwar Hossain [Star Connect]',
-        email: 'sarwarasik@gmail.com',
-        url: 'https://www.linkedin.com/in/sarwar-asik/',
-      },
-      license: {
-        name: 'Company',
-        url: 'https://dev.starconnect.com',
-      },
+class SwaggerService {
+  private options: Options;
+  private uiOptions: Record<string, unknown>;
+  private specification: object;
+
+  constructor({
+    serverName,
+    version = '1.0.0',
+    description = '',
+    contact = {
+      name: 'Sarwar Hossain [Star Connect]',
+      email: 'sarwarasik@gmail.com',
+      url: 'https://www.linkedin.com/in/sarwar-asik/',
     },
-    servers: [
-      {
-        url: "http://localhost:5003",
-      },
-      {
-        url: "http://54.157.71.177:5003",
-      },
+    license = {
+      name: 'Company',
+      url: 'https://dev.starconnect.com',
+    },
+    servers = [
+      { url: 'http://localhost:5003' },
+      { url: 'http://54.157.71.177:5003' },
     ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
+    swaggerDefinition,
+    swaggerTags,
+  }: SwaggerConfig) {
+    this.options = {
+      definition: {
+        openapi: '3.0.0',
+        info: {
+          title: `${serverName} Backend`,
+          version,
+          description: description || `Api Design of ${serverName}`,
+          contact,
+          license,
         },
+        servers,
+        components: {
+          securitySchemes: {
+            bearerAuth: {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT',
+            },
+          },
+          schemas: swaggerDefinition,
+        },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        tags: swaggerTags,
       },
-      schemas: swaggerDefinition,
-    },
-    security: [
-      {
-        bearerAuth: [],
+      apis: [path.join(__dirname, '../app/modules/**/*.ts')],
+    };
+
+    // UI Options
+    this.uiOptions = {
+      explorer: true,
+      tagsSorter: 'alpha',
+      operationsSorter: 'alpha',
+      customSiteTitle: `${serverName} API Docs`,
+      customCss: `
+        .swagger-ui .topbar { 
+          background-color: #2c3e50 !important; 
+          border-bottom: 2px solid #2980b9;
+        }
+        .swagger-ui .topbar a span { 
+          color: #ecf0f1 !important;
+          font-weight: bold;
+        }
+        .swagger-ui .topbar .topbar-wrapper::before {
+          content: '${serverName} Api Design';
+          color: #fff;
+          font-size: 18px;
+          margin:auto;
+          padding:24px;
+          text-align: center;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+      `,
+      docExpansion: 'none',
+      defaultModelsExpandDepth: 2,
+      swaggerOptions: {
+        persistAuthorization: true,
       },
-    ],
-    tags: swaggerTags,
-  },
-  apis: [path.join(__dirname, '../app/modules/**/*.ts')],
-};
+    };
 
-// ! swagger UI customization sections
-export const swaggerUiOptions = {
-  explorer: true,
-  tagsSorter: 'alpha', // Sort tags alphabetically
-  operationsSorter: 'alpha',
-  customSiteTitle: `${config.server_name} API Docs`,
-  // customfavIcon: '/uploadFile/images/default/ready-fav.png',
-  customCss: `
-      .swagger-ui .topbar { 
-          //  display: none !important;
-      background-color: #2c3e50 !important; 
-      border-bottom: 2px solid #2980b9;
-    }
-    .swagger-ui .topbar a span { 
-      color: #ecf0f1 !important;
-      font-weight: bold;
-    }
-    .swagger-ui .topbar .topbar-wrapper { 
-      // display: none !important; 
-    }
-    .swagger-ui .topbar .topbar-wrapper::before {
-      content: '${config.server_name} Api Design';
-      color: #fff;
-      font-size: 18px;
-      margin:auto;
-      padding:24px;
-      text-align: center;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-  `,
-  docExpansion: 'none',
-  defaultModelsExpandDepth: 2,
-  swaggerOptions: {
-    // docExpansion: 'none', // Collapses the routes by default
-    persistAuthorization: true,
+    this.specification = swaggerJsdoc(this.options);
+  }
 
-  },
-};
+  getSpecification(): object {
+    return this.specification;
+  }
 
-export const swaggerApiSpecification = swaggerJsdoc(options);
+  getOptions(): Options {
+    return this.options;
+  }
+
+  getUiOptions(): Record<string, unknown> {
+    return this.uiOptions;
+  }
+}
+
+const swaggerService = new SwaggerService({
+  serverName: config.server_name ?? 'The Server',
+  version: '1.0.0',
+  servers: [
+    { url: 'http://localhost:5003' },
+    { url: 'http://54.157.71.177:5003' },
+  ],
+  swaggerDefinition,
+  swaggerTags,
+});
+
+export const swaggerApiSpecification = swaggerService.getSpecification();
+export const swaggerUiOptions = swaggerService.getUiOptions();

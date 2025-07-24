@@ -1,5 +1,5 @@
-import { UserSchema } from '../app/modules/USER/user.model';
-import schemaConverter from './schemaConverter';
+import { UserSchema } from '../app/modules/user/user.model';
+import schemaConverter, { SchemaConverter } from './schemaConverter';
 
 export const swaggerTags = [
   {
@@ -21,5 +21,5 @@ export const swaggerTags = [
 ];
 
 export const swaggerDefinition = {
-  UserSchema: schemaConverter(UserSchema)
+  UserSchema: schemaConverter.convert(UserSchema),
 };

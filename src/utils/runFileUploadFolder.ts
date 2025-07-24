@@ -1,39 +1,57 @@
 import fs from 'fs';
 import path from 'path';
 
-// Function to check and create directories
-export function createDirectories(baseDir?: string, folders?: string[]): void {
-  const defaultBaseDir: string = path.join(__dirname, '../../uploadFile');
-  const defaultFolders: string[] = [
-    'images',
-    'audios',
-    'pdfs',
-    'videos',
-    'docs',
-    'others',
-  ];
-  const finalBaseDir = baseDir
-    ? path.join(__dirname, baseDir as string)
-    : defaultBaseDir;
-  const finalFolders = folders || defaultFolders;
+export interface IDirectoryManager {
+  ensureDirectoriesExist(baseDir?: string, folders?: string[]): void;
+}
 
-  // Check if base directory exists, if not create it
-  if (!fs.existsSync(finalBaseDir)) {
-    fs.mkdirSync(finalBaseDir);
-    // eslint-disable-next-line no-console
-    console.log(`Created base directory: ${finalBaseDir}`);
+export class DirectoryManager implements IDirectoryManager {
+  private readonly defaultBaseDir: string;
+  private readonly defaultFolders: string[];
+
+  constructor() {
+    this.defaultBaseDir = path.join(__dirname, '../../uploadFile');
+    this.defaultFolders = [
+      'images',
+      'audios',
+      'pdfs',
+      'videos',
+      'docs',
+      'others',
+    ];
   }
 
-  // Iterate through the folders and create them if they don't exist
-  finalFolders.forEach(folder => {
-    const folderPath = path.join(finalBaseDir, folder);
-    if (!fs.existsSync(folderPath)) {
-      fs.mkdirSync(folderPath);
+  /**
+   * Ensures that the specified directories exist, creating them if necessary.
+   * @param baseDir Optional custom base directory.
+   * @param folders Optional list of folder names to create inside the base directory.
+   */
+  public ensureDirectoriesExist(baseDir?: string, folders?: string[]): void {
+    const targetBaseDir = baseDir
+      ? path.join(__dirname, baseDir)
+      : this.defaultBaseDir;
+    const targetFolders = folders || this.defaultFolders;
+
+    this.createDirectoryIfNotExists(targetBaseDir);
+
+    targetFolders.forEach(folder => {
+      const folderPath = path.join(targetBaseDir, folder);
+      this.createDirectoryIfNotExists(folderPath);
+    });
+  }
+
+  /**
+   * Creates a directory if it does not already exist.
+   * @param dirPath The path of the directory to create.
+   */
+  private createDirectoryIfNotExists(dirPath: string): void {
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath);
       // eslint-disable-next-line no-console
-      console.log(`Created folder: ${folderPath}`.green);
-    } else {
-      // eslint-disable-next-line no-console
-      // console.log(`Folder already exists: ${folderPath}`.yellow);
+      console.log(`Created directory: ${dirPath}`);
     }
-  });
+  }
 }
+
+// Singleton instance for ease of use
+export const directoryManager = new DirectoryManager();

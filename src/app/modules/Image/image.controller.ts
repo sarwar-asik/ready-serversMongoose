@@ -1,6 +1,4 @@
-/* eslint-disable no-console */
 import { Request, Response } from 'express';
-// import sharp from 'sharp';
 import { ImageService } from './image.service';
 import sendResponse from '../../../shared/sendResponce';
 import httpStatus from 'http-status';
@@ -76,4 +74,8 @@ const getImageUrl = async (req: Request, res: Response) => {
   }
 };
 
-export const ImageController = { createBufferImage, getImageUrl, createLocalImage };
+export const ImageController = {
+  createBufferImage,
+  getImageUrl,
+  createLocalImage,
+};

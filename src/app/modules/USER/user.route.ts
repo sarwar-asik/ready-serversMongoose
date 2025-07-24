@@ -13,33 +13,35 @@ router.post(
   '/create-user',
   validateRequest(UserValidation.createUserZodSchema),
   auth(ENUM_USER_ROLE.ADMIN),
-  userController.createUser
+  userController.create,
 );
 router.get(
   '/my-profile',
   // auth(ENUM_USER_ROLE.ADMIN),
-  userController.myProfileController
+  userController.getUserById,
 );
 
-router.get('/:id', auth(ENUM_USER_ROLE.ADMIN), userController.getSingleUser);
+router.get('/:id', auth(ENUM_USER_ROLE.ADMIN), userController.getUserById);
 
-router.get('/', 
-  // auth(ENUM_USER_ROLE.ADMIN), 
-  userController.getALLUser);
+router.get(
+  '/',
+  // auth(ENUM_USER_ROLE.ADMIN),
+  userController.getAllUsers,
+);
 
 router.delete('/:id', auth(ENUM_USER_ROLE.ADMIN), userController.deleteUser);
 
 router.patch(
   '/my-profile',
   validateRequest(UserValidation.updateUserZodSchema),
-  userController.updateMyProfile
+  userController.updateUser,
 );
 
 router.patch(
   '/:id',
   validateRequest(UserValidation.updateUserZodSchema),
   auth(ENUM_USER_ROLE.ADMIN),
-  userController.updateUser
+  userController.updateUser,
 );
 
 export const UserRouter = router;

@@ -1,152 +1,85 @@
-/* eslint-disable no-console */
 import { Request, Response } from 'express';
-import { User } from './user.model';
-import { UserService } from './user.services';
+import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponce';
 import { IUser } from './user.interface';
-import { jwtHelpers } from '../../../helpers/jwtHelpers';
-import { Secret } from 'jsonwebtoken';
 
 import ApiError from '../../../errors/ApiError';
-import httpStatus from 'http-status';
-import bcrypt from 'bcrypt';
-import config from '../../../config';
+import { UserService, userService } from './user.services';
 
+class UserController {
+  create = catchAsync(async (req: Request, res: Response) => {
+    const userData: IUser = req.body;
+    const result = await userService.create(userData);
 
-const createUser = catchAsync(async (req: Request, res: Response) => {
-  const { ...user } = req.body;
-  // console.log(user, 'from controller=================');
-
-  const result = await UserService.createUserServices(user);
-  if (result) {
-    sendResponse(res, {
+    sendResponse<IUser>(res, {
+      statusCode: httpStatus.CREATED,
       success: true,
-      message: 'successfully create Users',
-      statusCode: 200,
+      message: 'User created successfully',
       data: result,
     });
-    // next()
-  }
-});
-
-const getALLUser = catchAsync(async (req: Request, res: Response) => {
-  const data = await User.find({});
-  sendResponse(res, {
-    success: true,
-    message: 'Successfully get Users data',
-    statusCode: 200,
-    data: data,
   });
-});
 
-const getSingleUser = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  getUserById = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.params.id;
+    const result = await userService.getById(userId);
 
-  const result = await UserService.getSingleUser(id);
-  // console.log(id,"id");
+    if (!result) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
 
-  sendResponse<IUser>(res, {
-    statusCode: 200,
-    success: true,
-    message: 'User retrieved successfully !',
-    data: result,
+    sendResponse<IUser | null>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User fetched successfully',
+      data: result,
+    });
   });
-});
 
-const deleteUser = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  getAllUsers = catchAsync(async (req: Request, res: Response) => {
+    const filter = req.query || {};
+    const result = await userService.getAll(filter);
 
-  const result = await UserService.deleteUser(id);
-
-  sendResponse<IUser>(res, {
-    statusCode: 200,
-    success: true,
-    message: 'Student deleted successfully !',
-    data: result,
+    sendResponse<IUser[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Users fetched successfully',
+      data: result,
+    });
   });
-});
 
-const updateUser = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const updatedData = req.body;
-  const result = await UserService.updateUser(id, updatedData);
+  updateUser = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.params.id;
+    const updateData = req.body;
+    const result = await userService.updateUser(userId, updateData);
 
-  sendResponse<IUser>(res, {
-    statusCode: 201,
-    success: true,
-    message: 'User updated successfully',
-    data: result,
+    if (!result) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+
+    sendResponse<IUser | null>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User updated successfully',
+      data: result,
+    });
   });
-});
 
-const myProfileController = catchAsync(async (req: Request, res: Response) => {
-  const token = req.headers.authorization;
+  deleteUser = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.params.id;
+    const result = await userService.deleteUser(userId);
 
-  if (!token) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, `You are not authorized`);
-  }
+    if (!result) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
 
-  const verifiedUser = jwtHelpers.verifyToken(
-    token as string,
-    config.jwt.secret as Secret
-  );
-
-  const id = verifiedUser._id;
-
-  const result = await UserService.myProfileServices(id);
-
-
-  sendResponse<Partial<IUser>>(res, {
-    statusCode: 200,
-    success: true,
-    message: "User's information retrieved successfully",
-    data: result,
+    sendResponse<IUser | null>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User deleted successfully',
+      data: result,
+    });
   });
-});
+}
 
-const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
-  const token = req.headers.authorization;
-  if (!token) {
-    throw new ApiError(
-      httpStatus.UNAUTHORIZED,
-      `You are not Correct authorized`
-    );
-  }
-
-  console.log(token);
-
-  const verifiedUser = jwtHelpers.verifyToken(
-    token as string,
-    config.jwt.secret as Secret
-  );
-
-  const id = verifiedUser?._id;
-
-  const updatedData = req.body;
-
-  const newUpdateData = updatedData
-
-
-  newUpdateData.password = await bcrypt.hash(updatedData?.password, Number(10));
-
-
-  const result = await UserService.updateMyProfile(id, newUpdateData);
-
-  sendResponse<Partial<IUser>>(res, {
-    statusCode: 201,
-    success: true,
-    message: 'Users information retrieved successfully',
-    data: result,
-  });
-});
-
-export const userController = {
-  createUser,
-  getALLUser,
-  getSingleUser,
-  deleteUser,
-  updateUser,
-  myProfileController,
-  updateMyProfile,
-};
+export const userController = new UserController();

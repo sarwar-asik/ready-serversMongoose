@@ -6,8 +6,6 @@ import httpStatus from 'http-status';
 export type IEmailOptions = {
   email: string;
   subject: string;
-  // template: string;
-  // data?: { [key: string]: any };
   html: any;
   text?: string;
 };

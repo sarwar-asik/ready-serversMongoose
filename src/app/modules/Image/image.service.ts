@@ -4,12 +4,12 @@ import config from '../../../config';
 import { Image_model } from './image.model';
 import ApiError from '../../../errors/ApiError';
 import { Request } from 'express';
-import { uploadLocalFileURL } from '../../../helpers/upload.helper';
+import { uploadLocalFileURL } from '../../../helpers/uploadHelper';
 import { IImage } from './image.interface';
 
 const createBufferImageDB = async (
   bufferFile: Buffer | undefined,
-  fileType: string
+  fileType: string,
 ): Promise<string> => {
   const payload = { buffer: bufferFile, fileType };
   const result = await Image_model.create(payload);
@@ -24,7 +24,7 @@ const createBufferImageDB = async (
 // };
 
 const createLocalImage = async (
-  req: Request
+  req: Request,
 ): Promise<Partial<IImage> | null> => {
   // return `${req.protocol}://${req.get('host')}`;
   try {
@@ -52,7 +52,7 @@ const createLocalImage = async (
     // console.error('Error creating local image:', error);
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      'Error creating local image'
+      'Error creating local image',
     );
     // return null;
   }

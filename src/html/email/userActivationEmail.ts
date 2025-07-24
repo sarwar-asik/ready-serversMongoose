@@ -1,6 +1,6 @@
-import config from '../config';
+import config from '../../config';
 
-export const registrationSuccessEmailBody = (userData: {
+export const userActivationEmail = (userData: {
   email?: string;
   activationCode: string;
   name: string;

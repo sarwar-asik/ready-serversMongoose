@@ -5,13 +5,10 @@ import * as os from 'os';
 import * as osUtils from 'os-utils';
 import * as path from 'path';
 import config from '../config';
-import { listLogFiles } from '../helpers/listLogFiles';
+import { listLogFiles } from '../helpers/listLogFilesHelper';
 
 dotenv.config();
 
-const logFilePath = path.resolve(__dirname, '../../app.log');
-
-// Interface for log entries
 type LogEntry = {
   timestamp: string;
   message: string;
@@ -19,273 +16,255 @@ type LogEntry = {
   errorPath: string;
 };
 
-// Function to read and parse log file
-function readLogFile(): LogEntry[] {
-  try {
-    const logData = fs.readFileSync(logFilePath, 'utf8');
-    const logEntries: LogEntry[] = logData
-      .split('\n')
-      .filter(entry => entry.trim() !== '')
-      .map(entry => {
-        try {
-          const regex =
-            /(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+Z) \[ERROR\] (.*) \(Status Code: (\d{3})\) \(Error Path: (.*)\)/;
-          const matches = entry.match(regex);
-          if (!matches) return null;
-
-          const timestamp = new Date(matches[1]).toLocaleString();
-          const message = matches[2];
-          const statusCode = matches[3];
-          const errorPath = matches[4];
-
-          if (errorPath.includes('/favicon.ico')) return null;
-
-          return {
-            timestamp,
-            message,
-            statusCode,
-            errorPath,
-          };
-        } catch (error: any) {
-          return null;
-        }
-      })
-      .filter(entry => entry !== null) as LogEntry[];
-
-    return logEntries;
-  } catch (error: any) {
-    return [];
-  }
-}
-
-// Function to generate HTML for log table
-// eslint-disable-next-line no-unused-vars
-function generateLogTable(logEntries: LogEntry[]): string {
-  const errorLogs = listLogFiles('errors');
-  const successLogs = listLogFiles('success');
-
-  const errorLogLinks = errorLogs
-    .map(
-      file =>
-        `<a href="/logs/errors/${file}" target="_blank" class="log-link">${file}</a>`
-    )
-    .join('<br>');
-  const successLogLinks = successLogs
-    .map(
-      file =>
-        `<a href="/logs/success/${file}" target="_blank" class="log-link">${file}</a>`
-    )
-    .join('<br>');
-
-  return `
-    <div class="log-container">
-      <div class="log-section">
-        <h3 style="color: #dc3545;">Error Logs</h3>
-        <div class="log-links error-logs">
-          ${errorLogLinks}
-        </div>
-      </div>
-      <div class="log-section">
-        <h3 style="color: #28a745;">Success Logs</h3>
-        <div class="log-links success-logs">
-          ${successLogLinks}
-        </div>
-      </div>
-      <style>
-        .log-container {
-          display: flex;
-          gap: 2rem;
-          margin: 1rem 0;
-        }
-        .log-section {
-          flex: 1;
-          padding: 1rem;
-          background: #f5f5f5;
-          border-radius: 8px;
-        }
-        .log-links {
-          margin-top: 1rem;
-        }
-        .log-link {
-          display: inline-block;
-          color: #0066cc;
-          text-decoration: none;
-          margin: 0.25rem 0;
-          padding: 0.5rem;
-          border-radius: 4px;
-          transition: background-color 0.2s;
-        }
-        .log-link:hover {
-          background-color: #e0e0e0;
-          text-decoration: underline;
-        }
-        .error-logs .log-link {
-          color: #dc3545;
-        }
-        .success-logs .log-link {
-          color: #28a745;
-        }
-      </style>
-    </div>
-  `;
-}
-
-// Interface for response times
 type ResponseTime = {
   route: string;
   time: number;
   label: string;
 };
 
-// Function to generate response times table
-function generateResponseTimesTable(responseTimes: ResponseTime[]): string {
-  if (responseTimes.length === 0) {
-    return '<p>No response time data available.</p>';
-  }
-
-  let tableHtml = `
-    <div class="table-wrapper">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Endpoint</th>
-            <th>Method</th>
-            <th>Response Time</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-  `;
-
-  responseTimes.forEach(entry => {
-    const statusClass =
-      entry.label === 'High' ? 'status-warning' : 'status-success';
-    tableHtml += `
-      <tr>
-        <td>${entry.route}</td>
-        <td>GET</td>
-        <td>${entry.time}ms</td>
-        <td><span class="status ${statusClass}"></span>${entry.label === 'High' ? 'Warning' : 'OK'
-      }</td>
-      </tr>
-    `;
-  });
-
-  tableHtml += `
-        </tbody>
-      </table>
-    </div>
-  `;
-
-  return tableHtml;
-}
-
-// Function to get CPU usage and generate HTML
-function generateCpuUsageHtml(): Promise<string> {
-  // eslint-disable-next-line no-unused-vars
-  return new Promise((resolve, reject) => {
-    osUtils.cpuUsage(function (v) {
-      const totalCores = os.cpus().length;
-      const cpuUsagePercentage = v * 100;
-      const usedCores = Math.ceil((cpuUsagePercentage / 100) * totalCores);
-      const idleCores = totalCores - usedCores;
-      // console.log(idleCores,'idleCores')
-
-      resolve(`
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <div class="metric-value">${cpuUsagePercentage.toFixed(2)}%</div>
-            <div class="metric-label">Total Usage</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">${usedCores}/${totalCores}</div>
-            <div class="metric-label">Active Cores</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">${idleCores}</div>
-            <div class="metric-label">Idle Cores</div>
-          </div>
-        </div>
-      `);
-    });
-  });
-}
-
-// Function to format uptime
-function formatUptime(uptimeInSeconds: number): string {
-  const days = Math.floor(uptimeInSeconds / (24 * 60 * 60));
-  const hours = Math.floor((uptimeInSeconds % (24 * 60 * 60)) / (60 * 60));
-  const minutes = Math.floor((uptimeInSeconds % (60 * 60)) / 60);
-  return `${days}d ${hours}h ${minutes}m`;
-}
-
-
-let lastServerUpdateTime = new Date();
-export function updateServerTime() {
-  lastServerUpdateTime = new Date();
-}
-// Function to format time ago
-function formatTimeAgo(date: Date): string {
-  /// console.log(date, 'dddddddddddd')
-  /// console.log(date.getTime(), 'date.getTime()')
-  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-  // console.log(seconds, 'seconds')
-
-  if (seconds < 60) return `${seconds}s ago`;
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-  /// console.log(`${Math.floor(seconds / 86400)}d ago`)
-  return `${Math.floor(seconds / 86400)}d ago`;
-}
-
-
-// Function to generate server metadata
-function generateServerMetadata(): {
+type ServerMetadata = {
   cpuName: string;
   speed: string;
   uptime: string;
   lastUpdate: string;
-} {
-  const hostname = os.hostname();
-  // console.log(hostname,'hostname')
-  const uptimeSeconds = os.uptime();
+};
 
-  // console.log(os.machine(),"machine",os.cpus()[0].model,"cpuModel",os.cpus()[0].speed,"cpuSpeed",os.cpus()[0].times,"cpuTimes")
+class ServerMonitor {
+  private logFilePath: string;
+  private lastServerUpdateTime: Date;
 
-  // You can store this in a variable and update it when server state changes
+  constructor() {
+    this.logFilePath = path.resolve(__dirname, '../../app.log');
+    this.lastServerUpdateTime = new Date();
+  }
 
-  // Generate a consistent server ID based on hostname
-  // const serviceID = `PRD-${hostname.slice(0, 3).toUpperCase()}-${Math.abs(hostname.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % 1000).toString().padStart(3, '0')}`;
+  public updateServerTime() {
+    this.lastServerUpdateTime = new Date();
+  }
 
-  // Get speed from environment or default
+  private readLogFile(): LogEntry[] {
+    try {
+      const logData = fs.readFileSync(this.logFilePath, 'utf8');
+      const logEntries: LogEntry[] = logData
+        .split('\n')
+        .filter(entry => entry.trim() !== '')
+        .map(entry => {
+          try {
+            const regex =
+              /(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+Z) \[ERROR\] (.*) \(Status Code: (\d{3})\) \(Error Path: (.*)\)/;
+            const matches = entry.match(regex);
+            if (!matches) return null;
 
+            const timestamp = new Date(matches[1]).toLocaleString();
+            const message = matches[2];
+            const statusCode = matches[3];
+            const errorPath = matches[4];
 
-  // console.log(uptimeSeconds,'uptimeSeconds')
-  const speedReadable = `${os.cpus()[0].speed} MHz`;
-  return {
-    cpuName: hostname + " -" + os.cpus()[0].model,
-    speed: speedReadable,
-    uptime: formatUptime(uptimeSeconds),
-    lastUpdate: formatTimeAgo(lastServerUpdateTime)
-  };
-}
+            if (errorPath.includes('/favicon.ico')) return null;
 
-// Function to generate the HTML page
-async function serverMonitorPage(
-  req: Request,
-  responseTimes: ResponseTime[]
-): Promise<string> {
-  // console.log(responseTimes, 'responseTimes')
-  const logEntries = readLogFile();
-  // console.log(listLogFiles("errors"), 'listLogFiles')
-  // console.log( listLogFiles("success"), 'listLogFiles')
-  const logTableHtml = generateLogTable(logEntries);
-  // console.log(responseTimes, 'responseTimes');
-  const responseTimesTableHtml = generateResponseTimesTable(responseTimes);
-  const cpuUsageHtml = await generateCpuUsageHtml();
-  const serverMeta = generateServerMetadata();
+            return {
+              timestamp,
+              message,
+              statusCode,
+              errorPath,
+            };
+          } catch (error: any) {
+            return null;
+          }
+        })
+        .filter(entry => entry !== null) as LogEntry[];
 
-  return `
+      return logEntries;
+    } catch (error: any) {
+      return [];
+    }
+  }
+
+  private generateLogTable(logEntries: LogEntry[]): string {
+    const errorLogs = listLogFiles('errors');
+    const successLogs = listLogFiles('success');
+
+    const errorLogLinks = errorLogs
+      .map(
+        file =>
+          `<a href="/logs/errors/${file}" target="_blank" class="log-link">${file}</a>`,
+      )
+      .join('<br>');
+    const successLogLinks = successLogs
+      .map(
+        file =>
+          `<a href="/logs/success/${file}" target="_blank" class="log-link">${file}</a>`,
+      )
+      .join('<br>');
+
+    return `
+      <div class="log-container">
+        <div class="log-section">
+          <h3 style="color: #dc3545;">Error Logs</h3>
+          <div class="log-links error-logs">
+            ${errorLogLinks}
+          </div>
+        </div>
+        <div class="log-section">
+          <h3 style="color: #28a745;">Success Logs</h3>
+          <div class="log-links success-logs">
+            ${successLogLinks}
+          </div>
+        </div>
+        <style>
+          .log-container {
+            display: flex;
+            gap: 2rem;
+            margin: 1rem 0;
+          }
+          .log-section {
+            flex: 1;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 8px;
+          }
+          .log-links {
+            margin-top: 1rem;
+          }
+          .log-link {
+            display: inline-block;
+            color: #0066cc;
+            text-decoration: none;
+            margin: 0.25rem 0;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+          }
+          .log-link:hover {
+            background-color: #e0e0e0;
+            text-decoration: underline;
+          }
+          .error-logs .log-link {
+            color: #dc3545;
+          }
+          .success-logs .log-link {
+            color: #28a745;
+          }
+        </style>
+      </div>
+    `;
+  }
+
+  private generateResponseTimesTable(responseTimes: ResponseTime[]): string {
+    if (responseTimes.length === 0) {
+      return '<p>No response time data available.</p>';
+    }
+
+    let tableHtml = `
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Endpoint</th>
+              <th>Method</th>
+              <th>Response Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    responseTimes.forEach(entry => {
+      const statusClass =
+        entry.label === 'High' ? 'status-warning' : 'status-success';
+      tableHtml += `
+        <tr>
+          <td>${entry.route}</td>
+          <td>GET</td>
+          <td>${entry.time}ms</td>
+          <td><span class="status ${statusClass}"></span>${
+            entry.label === 'High' ? 'Warning' : 'OK'
+          }</td>
+        </tr>
+      `;
+    });
+
+    tableHtml += `
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    return tableHtml;
+  }
+
+  private generateCpuUsageHtml(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      osUtils.cpuUsage(v => {
+        const totalCores = os.cpus().length;
+        const cpuUsagePercentage = v * 100;
+        const usedCores = Math.ceil((cpuUsagePercentage / 100) * totalCores);
+        const idleCores = totalCores - usedCores;
+
+        resolve(`
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-value">${cpuUsagePercentage.toFixed(2)}%</div>
+              <div class="metric-label">Total Usage</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">${usedCores}/${totalCores}</div>
+              <div class="metric-label">Active Cores</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">${idleCores}</div>
+              <div class="metric-label">Idle Cores</div>
+            </div>
+          </div>
+        `);
+      });
+    });
+  }
+
+  private formatUptime(uptimeInSeconds: number): string {
+    const days = Math.floor(uptimeInSeconds / (24 * 60 * 60));
+    const hours = Math.floor((uptimeInSeconds % (24 * 60 * 60)) / (60 * 60));
+    const minutes = Math.floor((uptimeInSeconds % (60 * 60)) / 60);
+    return `${days}d ${hours}h ${minutes}m`;
+  }
+
+  private formatTimeAgo(date: Date): string {
+    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+
+    if (seconds < 60) return `${seconds}s ago`;
+    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+    return `${Math.floor(seconds / 86400)}d ago`;
+  }
+
+  private generateServerMetadata(): ServerMetadata {
+    const hostname = os.hostname();
+    const uptimeSeconds = os.uptime();
+    const speedReadable = `${os.cpus()[0].speed} MHz`;
+    return {
+      cpuName: hostname + ' -' + os.cpus()[0].model,
+      speed: speedReadable,
+      uptime: this.formatUptime(uptimeSeconds),
+      lastUpdate: this.formatTimeAgo(this.lastServerUpdateTime),
+    };
+  }
+
+  public async getServerMonitorPage(
+    req: Request,
+    responseTimes: ResponseTime[],
+  ): Promise<string> {
+    const logEntries = this.readLogFile();
+    const logTableHtml = this.generateLogTable(logEntries);
+    const responseTimesTableHtml =
+      this.generateResponseTimesTable(responseTimes);
+    const cpuUsageHtml = await this.generateCpuUsageHtml();
+    const serverMeta = this.generateServerMetadata();
+
+    // The HTML below is unchanged except for method/prop calls
+    // (for brevity, not repeated here -- see your original HTML)
+    // ... (full HTML as in your original function)
+
+    return `
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -624,6 +603,10 @@ async function serverMonitorPage(
       </body>
     </html>
   `;
+  }
 }
 
-export default serverMonitorPage;
+// Single instance (Singleton pattern for stateful monitor)
+export const serverMonitor = new ServerMonitor();
+export const updateServerTime = () => serverMonitor.updateServerTime();
+export default serverMonitor;

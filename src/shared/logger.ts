@@ -1,78 +1,90 @@
-import { createLogger, format, transports } from 'winston'
-const { combine, timestamp, label, printf, prettyPrint } = format
-import DailyRotateFile from 'winston-daily-rotate-file'
+import {
+  createLogger,
+  format,
+  transports,
+  Logger as WinstonLogger,
+} from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
+import path from 'path';
 
-import path from 'path'
+const { combine, timestamp, label, printf, prettyPrint } = format;
 
-// custom log formate //
+interface ILogger {
+  info(message: string): void;
+  error(message: string): void;
+  warn(message: string): void;
+  debug?(message: string): void;
+}
 
-const myFormat = printf(({ level, message, label, timestamp }) => {
-  const date = new Date(timestamp as string)
-  const hour = date.getHours()
-  const minute = date.getMinutes()
-  const second = date.getSeconds()
+class Logger implements ILogger {
+  private logger: WinstonLogger;
 
-  return `${date.toDateString()},${hour}:${minute}:${second} [${label}] ${level}: ${message}`
-})
-
-const logger = createLogger({
-  format: combine(
-    label({ label: 'right meow!' }),
-    timestamp(),
-    myFormat,
-    prettyPrint()
-  ),
-  transports: [
-    new transports.Console(),
-
-    new DailyRotateFile({
-      filename: path.join(
-        process.cwd(),
-        'logs',
-        'winston',
-        'success',
-        'server-%DATE%-success.log'
+  constructor(
+    logLabel: string,
+    logLevel: string,
+    logFilePath: string,
+    maxFiles: string,
+  ) {
+    this.logger = createLogger({
+      level: logLevel,
+      format: combine(
+        label({ label: logLabel }),
+        timestamp(),
+        Logger.customFormat,
+        prettyPrint(),
       ),
-      datePattern: 'YYYY-MM-DD-HH',
-      zippedArchive: true,
-      maxSize: '20m',
-      maxFiles: '1d',
-    }),
-  ],
-})
+      transports: [
+        new transports.Console(),
+        new DailyRotateFile({
+          filename: path.join(
+            process.cwd(),
+            'logs',
+            'winston',
+            logFilePath,
+            `server-%DATE%-${logLevel}.log`,
+          ),
+          datePattern: 'YYYY-MM-DD-HH',
+          zippedArchive: true,
+          maxSize: '20m',
+          maxFiles,
+        }),
+      ],
+    });
 
-const errorLogger = createLogger({
-  level: 'error',
-  //   format: format.json(),
-  format: combine(
-    label({ label: 'right meow!' }),
-    timestamp(),
-    myFormat,
-    prettyPrint()
-  ),
-  transports: [
-    new transports.Console(),
+    // Add a plain console transport for simple logs
+    this.logger.add(
+      new transports.Console({
+        format: format.simple(),
+      }),
+    );
+  }
 
-    new DailyRotateFile({
-      filename: path.join(
-        process.cwd(),
-        'logs',
-        'winston',
-        'errors',
-        'server-error-%DATE%-error.log'
-      ),
-      datePattern: 'YYYY-MM-DD-HH',
-      zippedArchive: true,
-      maxSize: '20m',
-      maxFiles: '5d',
-    }),
-  ],
-})
+  static customFormat = printf(({ level, message, label, timestamp }) => {
+    const date = new Date(timestamp as string);
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const second = date.getSeconds();
 
-logger.add(
-  new transports.Console({
-    format: format.simple(),
-  })
-)
+    return `${date.toDateString()},${hour}:${minute}:${second} [${label}] ${level}: ${message}`;
+  });
 
-export { logger, errorLogger }
+  info(message: string): void {
+    this.logger.info(message);
+  }
+
+  error(message: string): void {
+    this.logger.error(message);
+  }
+
+  warn(message: string): void {
+    this.logger.warn(message);
+  }
+
+  debug?(message: string): void {
+    this.logger.debug?.(message);
+  }
+}
+
+// Singleton instances
+export const logger = new Logger('right meow!', 'info', 'success', '1d');
+export const errorLogger = new Logger('right meow!', 'error', 'errors', '5d');

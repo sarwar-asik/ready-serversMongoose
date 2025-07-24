@@ -1,42 +1,40 @@
 import { Types } from 'mongoose';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response, RequestHandler } from 'express';
 import ApiError from '../../errors/ApiError';
 import httpStatus from 'http-status';
 import config from '../../config';
 import { Secret } from 'jsonwebtoken';
-import { jwtHelpers } from '../../helpers/jwtHelpers';
-import { User } from '../modules/USER/user.model';
+import { User } from '../modules/user/user.model';
+import { JwtHelper } from '../../helpers/jwtHelper';
 
-const auth =
-  (...roles: string[]) =>
-    async (req: Request, res: Response, next: NextFunction) => {
+export interface IAuthMiddleware {
+  authorize(...roles: string[]): RequestHandler;
+}
+
+export class AuthMiddleware implements IAuthMiddleware {
+  public authorize(...roles: string[]): RequestHandler {
+    return async (req: Request, res: Response, next: NextFunction) => {
       try {
         const tokenWithBearer = req.headers.authorization;
 
         if (!tokenWithBearer) {
           throw new ApiError(
             httpStatus.UNAUTHORIZED,
-            'You are not authorized for this role'
+            'You are not authorized for this role',
           );
         }
 
-        // console.log(tokenWithBearer, 'tokenWithBearer');
         if (tokenWithBearer && tokenWithBearer.startsWith('Bearer')) {
           const token = tokenWithBearer.split(' ')[1];
-
-          //verify token
-          const verifyUser = jwtHelpers.verifyToken(
+          // Verify token
+          const verifyUser = JwtHelper.verifyToken(
             token,
-            config.jwt.secret as Secret
+            config.jwt.secret as Secret,
           );
-
-          // eslint-disable-next-line no-console
-          // console.log(verifyUser, 'verifyUser');
-          //set user to headers
           req.user = verifyUser;
-          // console.log(verifyUser, 'verifyUser');
-          const isExist = await User.findOne({
 
+          // Check if user exists and is active
+          const isExist = await User.findOne({
             is_active: true,
             $or: [
               { _id: new Types.ObjectId(verifyUser._id as string) },
@@ -45,25 +43,38 @@ const auth =
           });
 
           if (!isExist) {
-            throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+            throw new ApiError(
+              httpStatus.UNAUTHORIZED,
+              'You are not authorized',
+            );
           }
 
-          // console.log(roles);
-          // console.log(verifyUser.role);
-
+          // Check user role permissions
           if (roles.length && !roles.includes(verifyUser.role)) {
             throw new ApiError(
               httpStatus.FORBIDDEN,
-              'Access Forbidden: You do not have permission to perform this action'
+              'Access Forbidden: You do not have permission to perform this action',
             );
           }
-          // console.log(req.user, 'req.user');
-          next();
+
+          return next();
         }
+
+        // If Bearer not present or malformed
+        throw new ApiError(
+          httpStatus.UNAUTHORIZED,
+          'You are not authorized for this role',
+        );
       } catch (error) {
         next(error);
       }
-      // next();
     };
+  }
+}
 
+// Singleton instance for easy import and use
+export const authMiddleware = new AuthMiddleware();
+
+// For backward compatibility and easier migration
+const auth = (...roles: string[]) => authMiddleware.authorize(...roles);
 export default auth;

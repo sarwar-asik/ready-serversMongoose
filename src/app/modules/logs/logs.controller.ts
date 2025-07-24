@@ -1,22 +1,23 @@
-import { Request, Response } from "express";
-import fs from "fs";
-import path from "path";
-import { listLogFiles } from "../../../helpers/listLogFiles";
-
+import { Request, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
+import { listLogFiles } from '../../../helpers/listLogFilesHelper';
 
 const getAllErrorLogs = async (req: Request, res: Response) => {
-  const errorFiles = listLogFiles("errors");
+  const errorFiles = listLogFiles('errors');
 
   if (errorFiles.length === 0) {
-    res.status(200).send(`<h1>Error Logs...</h1><p>No error logs. available.</p>`);
+    res
+      .status(200)
+      .send(`<h1>Error Logs...</h1><p>No error logs. available.</p>`);
   } else {
     const fileListHTML = errorFiles
       .map(
-        (file) => `
+        file => `
       <li><a href="/logs/errors/${file}">${file}</a></li>
-    `
+    `,
       )
-      .join("");
+      .join('');
 
     res.status(200).send(`
     <html>
@@ -34,7 +35,7 @@ const getAllErrorLogs = async (req: Request, res: Response) => {
   }
 };
 const getAllSuccessLogs = async (req: Request, res: Response) => {
-  const successFiles = listLogFiles("successes");
+  const successFiles = listLogFiles('successes');
 
   if (successFiles.length === 0) {
     res
@@ -43,11 +44,11 @@ const getAllSuccessLogs = async (req: Request, res: Response) => {
   } else {
     const fileListHTML = successFiles
       .map(
-        (file) => `
+        file => `
       <li><a href="/logs/successes/${file}">${file}</a></li>
-    `
+    `,
       )
-      .join("");
+      .join('');
 
     res.status(200).send(`
     <html>
@@ -70,14 +71,14 @@ const getSpecificErrorLog = async (req: Request, res: Response) => {
   const logfile = req.params.logfile;
   const logPath = path.join(
     process.cwd(),
-    "logs",
-    "winston",
-    "errors",
-    logfile
+    'logs',
+    'winston',
+    'errors',
+    logfile,
   );
 
   if (fs.existsSync(logPath)) {
-    fs.readFile(logPath, "utf8", (err, data) => {
+    fs.readFile(logPath, 'utf8', (err, data) => {
       if (err) {
         res.status(500).send(`
           <html>
@@ -129,14 +130,14 @@ const getSpecificSuccessLog = async (req: Request, res: Response) => {
   const logfile = req.params.logfile;
   const logPath = path.join(
     process.cwd(),
-    "logs",
-    "winston",
-    "successes",
-    logfile
+    'logs',
+    'winston',
+    'successes',
+    logfile,
   );
 
   if (fs.existsSync(logPath)) {
-    fs.readFile(logPath, "utf8", (err, data) => {
+    fs.readFile(logPath, 'utf8', (err, data) => {
       if (err) {
         res.status(500);
 
