@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 export const UserSchema: Schema<IUser> = new Schema<IUser>(
   {
     password: { type: String, required: true },
-    role: { type: String, required: true, enum: ['buyer', 'seller', 'admin'] },
+    role: { type: String, required: true, enum: ['user', 'seller', 'admin'] },
     name: {
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
@@ -14,9 +14,7 @@ export const UserSchema: Schema<IUser> = new Schema<IUser>(
     address: { type: String, required: true },
     budget: {
       type: Number,
-      required: function (this: IUser) {
-        return this.role === 'buyer';
-      },
+      required:false
     },
     income: {
       type: Number,

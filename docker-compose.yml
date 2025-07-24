@@ -41,7 +41,6 @@ services:
       - .:/app
       - /app/node_modules
       - ./uploadFile:/app/uploadFile
-      - ./uploads:/app/uploads
     env_file:
       - .env
     environment:
@@ -49,7 +48,7 @@ services:
       - DB_URL=mongodb://admin:password123@mongodb:27017/ready-servers-DB?authSource=admin
     networks:
       - ready-servers-network
-    command: npm run dev # Use dev command for auto-restart on file changes
+    command: sh -c "npm install && npm run dev" # Use dev command for auto-restart on file changes
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:5001']
       interval: 30s

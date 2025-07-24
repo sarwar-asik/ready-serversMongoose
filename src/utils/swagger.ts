@@ -40,8 +40,8 @@ class SwaggerService {
       url: 'https://dev.starconnect.com',
     },
     servers = [
-      { url: 'http://localhost:5003' },
-      { url: 'http://54.157.71.177:5003' },
+      { url: 'http://localhost:5001' },
+      { url: 'http://54.157.71.177:5001' },
     ],
     swaggerDefinition,
     swaggerTags,
@@ -130,8 +130,8 @@ const swaggerService = new SwaggerService({
   serverName: config.server_name ?? 'The Server',
   version: '1.0.0',
   servers: [
-    { url: 'http://localhost:5003' },
-    { url: 'http://54.157.71.177:5003' },
+    { url: 'http://localhost:5001' },
+    { url: 'http://54.157.71.177:5001' },
   ],
   swaggerDefinition,
   swaggerTags,
