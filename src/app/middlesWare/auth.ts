@@ -4,7 +4,7 @@ import ApiError from '../../errors/ApiError';
 import httpStatus from 'http-status';
 import config from '../../config';
 import { Secret } from 'jsonwebtoken';
-import { User } from '../modules/user/user.model';
+import { User } from '../modules/users/user.model';
 import { JwtHelper } from '../../helpers/jwtHelper';
 
 export interface IAuthMiddleware {

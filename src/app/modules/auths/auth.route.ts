@@ -4,7 +4,7 @@ import validateRequest from '../../middlesWare/validateUserRequest';
 import { AuthValidation } from './auth.validation';
 import { authController } from './auth.controller';
 
-import { UserValidation } from '../user/user.validation';
+import { UserValidation } from '../users/user.validation';
 
 const router = express.Router();
 

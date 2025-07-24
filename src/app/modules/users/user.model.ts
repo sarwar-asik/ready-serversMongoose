@@ -50,7 +50,7 @@ UserSchema.statics.isPasswordMatchMethod = async function (
 };
 
 UserSchema.pre<IUser>('save', function (next) {
-  if (this.role === 'buyer') {
+  if (this.role === 'user') {
     console.log(this.budget, 'from prehook');
 
     this.income = 0;

@@ -7,8 +7,8 @@ import {
 } from './auth.Interface';
 import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
-import { User } from '../user/user.model';
-import { IUser } from '../user/user.interface';
+import { User } from '../users/user.model';
+import { IUser } from '../users/user.interface';
 import { JwtHelper } from '../../../helpers/jwtHelper';
 
 export class AuthService {
