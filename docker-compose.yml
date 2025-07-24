@@ -1,15 +1,68 @@
 version: '3.8'
 
 services:
-  map-point-backend:
+  mongodb:
+    image: mongo:7.0
+    container_name: ready-servers-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: ready-servers-DB
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - ready-servers-network
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: 'none'
+    command: ['mongod', '--quiet', '--logpath', '/dev/null']
+
+  backend:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: ready-servers-backend
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
     ports:
-      - "5002:5002" # Match the PORT from your .env file
+      - '5001:5001' # Match the PORT from your .env file
     volumes:
       - .:/app
       - /app/node_modules
+      - ./uploadFile:/app/uploadFile
+      - ./uploads:/app/uploads
     env_file:
-      - .env # Specify your .env file
-    command: npm run start # Or your relevant start script
+      - .env
+    environment:
+      - NODE_ENV=development
+      - DB_URL=mongodb://admin:password123@mongodb:27017/ready-servers-DB?authSource=admin
+    networks:
+      - ready-servers-network
+    command: npm run dev # Use dev command for auto-restart on file changes
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5001']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+
+networks:
+  ready-servers-network:
+    driver: bridge

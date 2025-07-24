@@ -19,8 +19,9 @@ class ServerManager {
     this.handleSigterm();
   }
 
-  private logInfo(message: () => string | string) {
-    config.env === 'production' ? logger.info(message) : console.log(message);
+  private logInfo(message: (() => string) | string) {
+    const msg = typeof message === 'function' ? message() : message;
+    config.env === 'production' ? logger.info(msg) : console.log(msg);
   }
   public async start(): Promise<void> {
     await this.connectDatabase();
@@ -63,6 +64,9 @@ class ServerManager {
     try {
       await mongoose.connect(config.database_url as string, {
         dbName: `${config.server_name}-DB`,
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
       });
       this.logInfo('Database connection successful'.green.underline.bold);
     } catch (error) {
@@ -103,9 +107,11 @@ class ServerManager {
 
   private logError(message: string, error: any) {
     const errorMsg = `${message} ${error?.message || error}`.red.bold;
-    config.env === 'production'
-      ? errorLogger.error(errorMsg)
-      : console.log(errorMsg);
+    if (config.env === 'production') {
+      errorLogger.error(typeof errorMsg === 'function' ? errorMsg() : errorMsg);
+    } else {
+      console.log(errorMsg);
+    }
   }
 }
 
