@@ -1,4 +1,4 @@
-import { UserSchema } from '../app/modules/users/user.model';
+import { UserSchema } from '../app/modules/user/user.model';
 import schemaConverter, { SchemaConverter } from './schemaConverter';
 
 export const swaggerTags = [

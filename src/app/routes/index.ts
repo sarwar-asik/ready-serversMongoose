@@ -1,7 +1,7 @@
 import express from 'express';
-import { UserRouter } from '../modules/users/user.route';
-import { AuthRouter } from '../modules/auths/auth.route';
-import { ImageRoutes } from '../modules/images/image.route';
+import { UserRouter } from '../modules/user/user.route';
+import { AuthRouter } from '../modules/auth/auth.route';
+import { ImageRoutes } from '../modules/image/image.route';
 
 const router = express.Router();
 
