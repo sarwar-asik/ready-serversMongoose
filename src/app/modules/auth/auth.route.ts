@@ -47,9 +47,33 @@ router.post(
  *                 type: string
  *               contactNumber:
  *                 type: string
+ *               role:
+ *                 type: string
+ *               name:
+ *                 type: object
+ *                 properties:
+ *                   firstName:
+ *                     type: string
+ *                   lastName:
+ *                     type: string
+ *               address:
+ *                 type: string
  *             required:
  *               - email
  *               - password
+ *               - contactNumber
+ *               - role
+ *               - name
+ *               - address
+ *           example:
+ *             email: "test2"
+ *             password: "string"
+ *             contactNumber: "string"
+ *             role: "user"
+ *             name:
+ *               firstName: "te"
+ *               lastName: "te"
+ *             address: "sfasd"
  *     responses:
  *       200:
  *         description: Successfully signup

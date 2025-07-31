@@ -19,6 +19,7 @@ import {
 } from './app/middlesWare/expressMiddlewares';
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
+import client from 'prom-client';
 import { swaggerApiSpecification, swaggerUiOptions } from './utils/swagger';
 import { LogsRoutes } from './app/modules/logs/logs.routes';
 import serverMonitor from './utils/serverMonitor';
@@ -31,6 +32,8 @@ class AppManager {
 
   constructor() {
     this.app = express();
+    const collectDefaultMetrics = client.collectDefaultMetrics;
+    collectDefaultMetrics();
     this.allowedOrigins = (config?.allowed_origin || '').split(',');
     this.setupMiddlewares();
     this.setupRoutes();
@@ -104,6 +107,16 @@ class AppManager {
   };
 
   private setupRoutes() {
+    // Prometheus metrics endpoint - very important for monitoring
+    this.app.get('/metrics', async (req, res) => {
+      try {
+        res.set('Content-Type', 'text/plain; version=0.0.4; charset=utf-8');
+        res.end(await client.register.metrics());
+      } catch (error) {
+        res.status(500).end('Error generating metrics');
+      }
+    });
+
     this.app.use('/api/v1', this.responseTimeLogger, routes);
     this.app.get('/api-docs-json', (req, res) => {
       res.json(swaggerApiSpecification);

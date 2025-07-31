@@ -41,6 +41,7 @@ services:
       - .:/app
       - /app/node_modules
       - ./uploadFile:/app/uploadFile
+      - ./logs:/app/logs
     env_file:
       - .env
     environment:
@@ -56,6 +57,44 @@ services:
       retries: 3
       start_period: 40s
 
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    ports:
+      - '9100:9100'
+    networks:
+      - ready-servers-network
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - '9090:9090'
+    networks:
+      - ready-servers-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - '3000:3000'
+    networks:
+      - ready-servers-network
+
+  mongodb-exporter:
+    image: bitnami/mongodb-exporter:latest
+    container_name: mongodb-exporter
+    environment:
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/ready-servers-DB?authSource=admin
+    ports:
+      - '9216:9216'
+    networks:
+      - ready-servers-network
+    restart: unless-stopped
+
 volumes:
   mongodb_data:
     driver: local
@@ -64,4 +103,4 @@ volumes:
 
 networks:
   ready-servers-network:
-    driver: bridge
+    external: true
