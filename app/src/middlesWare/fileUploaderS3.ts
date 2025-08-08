@@ -3,7 +3,7 @@ import multerS3 from 'multer-s3';
 import { Request, Express } from 'express';
 import path from 'path';
 import { S3Client } from '@aws-sdk/client-s3';
-import config from '../../config';
+import config from '../config';
 
 interface IFileUploadManager {
   getUploader(useS3?: boolean): Multer;
