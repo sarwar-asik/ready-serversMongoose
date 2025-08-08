@@ -25,7 +25,6 @@ import {
   swaggerApiSpecification,
   swaggerUiOptions,
 } from './common/utils/swagger';
-import serverMonitor from './common/utils/serverMonitor';
 
 class AppManager {
   public app: Application;
