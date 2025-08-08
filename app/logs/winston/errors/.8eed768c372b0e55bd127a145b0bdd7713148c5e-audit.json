@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 5
+    },
+    "auditLog": "/Users/sar2/Desktop/WEB/Cloned/ready-serversMongoose/app/logs/winston/errors/.8eed768c372b0e55bd127a145b0bdd7713148c5e-audit.json",
+    "files": [
+        {
+            "date": 1754675826293,
+            "name": "/Users/sar2/Desktop/WEB/Cloned/ready-serversMongoose/app/logs/winston/errors/server-2025-08-08-23-error.log",
+            "hash": "a139124883fcec2d91263a370d9ed831bbfb88e51713fce6da18c9cdc1c5b502"
+        }
+    ],
+    "hashType": "sha256"
+}

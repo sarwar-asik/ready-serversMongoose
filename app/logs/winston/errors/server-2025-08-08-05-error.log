@@ -1,0 +1,18 @@
+{
+  message: 'the ttest error',
+  level: 'error',
+  label: 'right meow!',
+  timestamp: '2025-08-08T05:26:22.064Z'
+}
+{
+  message: 'the ttest error',
+  level: 'error',
+  label: 'right meow!',
+  timestamp: '2025-08-08T05:26:25.152Z'
+}
+{
+  message: 'the ttest error',
+  level: 'error',
+  label: 'right meow!',
+  timestamp: '2025-08-08T05:27:30.895Z'
+}
