@@ -47,7 +47,6 @@ export class DirectoryManager implements IDirectoryManager {
   private createDirectoryIfNotExists(dirPath: string): void {
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath);
-      // eslint-disable-next-line no-console
       console.log(`Created directory: ${dirPath}`);
     }
   }

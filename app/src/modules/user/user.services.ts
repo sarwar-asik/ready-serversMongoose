@@ -4,7 +4,7 @@ import { IUser } from './user.interface';
 import httpStatus from 'http-status';
 import ApiError from '../../errors/ApiError';
 
-export class UserService {
+class UserService {
   public async create(user: IUser): Promise<IUser> {
     const createdUser = await User.create(user);
     if (!createdUser) {
@@ -21,9 +21,6 @@ export class UserService {
     return User.find(filter);
   }
 
-  /**
-   * Update a user by ID.
-   */
   public async updateUser(
     id: string,
     payload: Partial<IUser>,
@@ -37,9 +34,6 @@ export class UserService {
     return updatedUser;
   }
 
-  /**
-   * Delete a user by ID.
-   */
   public async deleteUser(id: string): Promise<IUser | null> {
     const deletedUser = await User.findByIdAndDelete(id);
     if (!deletedUser) {
@@ -49,5 +43,4 @@ export class UserService {
   }
 }
 
-// Singleton instance for usage
 export const userService = new UserService();

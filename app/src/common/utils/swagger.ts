@@ -75,7 +75,7 @@ class SwaggerService {
         ],
         tags: swaggerTags,
       },
-      apis: [path.join(__dirname, '../app/modules/**/*.ts')],
+      apis: [path.join(__dirname, '../../../../app/src/modules/**/*.ts')],
     };
 
     // UI Options

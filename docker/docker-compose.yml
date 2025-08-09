@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mongodb:
@@ -10,48 +10,48 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password123
       MONGO_INITDB_DATABASE: ready-servers-DB
     ports:
-      - '27017:27017'
+      - "27017:27017"
     volumes:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
     networks:
       - ready-servers-network
     healthcheck:
-      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
     logging:
-      driver: 'none'
-    command: ['mongod', '--quiet', '--logpath', '/dev/null']
+      driver: "none"
+    command: ["mongod", "--quiet", "--logpath", "/dev/null"]
 
   backend:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../app # Changed from . to ../app
+      dockerfile: ../docker/Dockerfile
     container_name: ready-servers-backend
     restart: unless-stopped
     depends_on:
       mongodb:
         condition: service_healthy
     ports:
-      - '5001:5001' # Match the PORT from your .env file
+      - "5001:5001"
     volumes:
-      - .:/app
+      - ../app:/app
       - /app/node_modules
-      - ./uploadFile:/app/uploadFile
-      - ./logs:/app/logs
+      - ../uploadFile:/app/uploadFile
+      - ../logs:/app/logs
     env_file:
-      - .env
+      - ../app/.env
     environment:
       - NODE_ENV=development
       - DB_URL=mongodb://admin:password123@mongodb:27017/ready-servers-DB?authSource=admin
     networks:
       - ready-servers-network
-    command: sh -c "npm install && npm run dev" # Use dev command for auto-restart on file changes
+    command: sh -c "npm install && npm run dev"
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:5001']
+      test: ["CMD", "curl", "-f", "http://localhost:5001"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -61,7 +61,7 @@ services:
     image: prom/node-exporter:latest
     container_name: node_exporter
     ports:
-      - '9100:9100'
+      - "9100:9100"
     networks:
       - ready-servers-network
     restart: unless-stopped
@@ -72,7 +72,7 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - '9090:9090'
+      - "9090:9090"
     networks:
       - ready-servers-network
 
@@ -80,7 +80,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
-      - '3000:3000'
+      - "3000:3000"
     networks:
       - ready-servers-network
 
@@ -90,7 +90,7 @@ services:
     environment:
       - MONGODB_URI=mongodb://admin:password123@mongodb:27017/ready-servers-DB?authSource=admin
     ports:
-      - '9216:9216'
+      - "9216:9216"
     networks:
       - ready-servers-network
     restart: unless-stopped

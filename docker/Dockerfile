@@ -1,29 +1,37 @@
-FROM node:22  AS builder
-# RUN apk add --no-cache python3 make g++ 
+FROM node:22 AS builder
+
 WORKDIR /app
 
-COPY package.json  ./
+# Copy only package files first (to leverage layer caching)
+COPY package*.json ./
 
-# RUN yarn cache clean
-RUN npm cache clean --force
+# Install dependencies
+RUN npm ci --legacy-peer-deps
 
-# RUN yarn install --frozen-lockfile
-# RUN npm install --production
-RUN npm install
+# Copy the rest of the source
+COPY tsconfig.json ./
+COPY src ./src
 
-COPY . .
-
-# RUN yarn build
+# Build TypeScript
 RUN npm run build
 
-FROM node:22 
+# ----------------------
+# 2. Production Stage
+# ----------------------
+FROM node:22
 
 WORKDIR /app
 
-COPY --from=builder /app/node_modules ./node_modules
+# Copy only production dependencies
+COPY package*.json ./
+RUN npm ci --only=production --legacy-peer-deps
+
+# Copy compiled code from builder
 COPY --from=builder /app/dist ./dist
-COPY . /app
 
-EXPOSE 5002
+# Copy any additional needed files (config, env, etc.)
+COPY .env ./
 
-CMD ["npm", "start"]
+EXPOSE 5000
+
+CMD ["node", "dist/server.js"]

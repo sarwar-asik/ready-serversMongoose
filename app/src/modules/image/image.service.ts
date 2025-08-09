@@ -19,10 +19,6 @@ const createBufferImageDB = async (
   return image_User;
 };
 
-// const getImageUrl = async (id: string): Promise<string> => {
-
-// };
-
 const createLocalImage = async (
   req: Request,
 ): Promise<Partial<IImage> | null> => {

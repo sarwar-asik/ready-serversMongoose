@@ -12,3 +12,6 @@ uploadFile
 dist
 logs/winston
 
+.DS_Store
+.idea
+

@@ -11,7 +11,7 @@ import { User } from '../user/user.model';
 import { IUser } from '../user/user.interface';
 import { JwtHelper } from '../../helpers/jwtHelper';
 
-export class AuthService {
+class AuthService {
   async login(payload: ILogin): Promise<ILoginResponse> {
     const { email, password } = payload;
 

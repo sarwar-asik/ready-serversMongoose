@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { IUser } from './user.interface';
-import { UserService, userService } from './user.services';
+import { userService } from './user.services';
 import catchAsync from '../../shared/catchAsync';
 import sendResponse from '../../shared/sendResponse';
 import ApiError from '../../errors/ApiError';
