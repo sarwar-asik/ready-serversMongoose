@@ -35,7 +35,7 @@ jobs:
       - name: Build and test with Docker Compose
         run: |
           cd docker
-          docker-compose up --build -d
+          docker compose up --build -d
           sleep 60
           docker ps -a
 
@@ -43,7 +43,7 @@ jobs:
         if: always()
         run: |
           cd docker
-          docker-compose down -v
+          docker compose down -v
 
   deploy-dashboard:
     runs-on: ubuntu-latest
