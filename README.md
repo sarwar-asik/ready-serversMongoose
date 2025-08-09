@@ -153,16 +153,54 @@ S3_REGION=my_region
 ## 📁 Project Structure
 
 ```
-src/
 ├── app/
-│   ├── modules/
-│   │   ├── auth/
-│   │   └── users/
-│   ├── middlewares/
-│   └── utils/
-├── config/
-├── interfaces/
-└── server.ts
+│   ├── dist/                          # Compiled TypeScript files
+│   ├── logs/winston/                  # Winston log files
+│   │   ├── errors/                    # Error logs
+│   │   └── success/                   # Success logs
+│   ├── node_modules/                  # Dependencies
+│   └── src/                          # Source code
+│       ├── common/                   # Shared utilities
+│       │   ├── config/               # Configuration files
+│       │   ├── errors/               # Error handling
+│       │   ├── helpers/              # Helper functions
+│       │   ├── middleware/           # Custom middlewares
+│       │   └── utils/                # Utility functions
+│       ├── modules/                  # Feature modules
+│       │   ├── auth/                 # Authentication module
+│       │   ├── image/                # Image handling
+│       │   ├── logs/                 # Logging module
+│       │   └── user/                 # User management
+│       │       ├── user.controller.ts
+│       │       ├── user.docs.ts
+│       │       ├── user.interface.ts
+│       │       ├── user.model.ts
+│       │       ├── user.route.ts
+│       │       ├── user.services.ts
+│       │       └── user.validation.ts
+│       ├── routes/                   # Route definitions
+│       ├── shared/                   # Shared components
+│       │   ├── catchAsync.ts
+│       │   ├── logger.ts
+│       │   ├── pick.ts
+│       │   └── sendResponse.ts
+│       ├── app.ts                    # Express app configuration
+│       └── server.ts                 # Server entry point
+|     ├── test/                            # Test files
+|     ├── .env.example                     # Environment template
+|     ├── .gitignore                       # Git ignore rules
+|     ├── docker-compose.yml               # Docker compose
+|     ├── Dockerfile                       # Docker configuration
+|     ├── package.json                     # Project dependencies
+|     ├── tsconfig.json                    # TypeScript configuration
+├── docker/                           # Docker configuration
+├── uploadFile/                       # File upload directory
+├── .devcontainer/                    # VS Code dev container
+├── .github/workflows/                # GitHub Actions
+│   ├── build-server.yml
+│   └── formatter.yml
+├── .vscode/                          # VS Code settings
+└── README.md                        # Project documentation
 ```
 
 ## 🤝 Contributing

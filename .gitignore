@@ -10,8 +10,7 @@ yarn-error.log
 
 uploadFile
 dist
-logs/winston
+app/logs/winston/
 
 .DS_Store
 .idea
-
