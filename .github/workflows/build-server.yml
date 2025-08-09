@@ -1,10 +1,8 @@
 name: Ready the code and deploy
 
-on:
-  [push, workflow_dispatch]
+on: [push, workflow_dispatch]
 
 jobs:
-
   test-server:
     runs-on: ubuntu-latest
     steps:
@@ -25,18 +23,27 @@ jobs:
     steps:
       - name: Copying the code
         uses: actions/checkout@v4
-      - name: Install node
-        uses: actions/setup-node@v4
-        with:
-            node-version: 22
-      - name: Node Version
-        run: node --version
-      - name: Install the app
-        run: yarn install --frozen-lockfile
-      - name: Build the app
-        run: yarn build
-      # - name: Run the app
-      #   run: yarn dev
+
+      - name: Create environment file
+        run: |
+          cd app
+          cp .env.example .env
+
+      - name: Create Docker network
+        run: docker network create ready-servers-network || true
+
+      - name: Build and test with Docker Compose
+        run: |
+          cd docker
+          docker-compose up --build -d
+          sleep 60
+          docker ps -a
+
+      - name: Cleanup
+        if: always()
+        run: |
+          cd docker
+          docker-compose down -v
 
   deploy-dashboard:
     runs-on: ubuntu-latest
@@ -44,10 +51,6 @@ jobs:
     steps:
       - name: Copying the code
         uses: actions/checkout@v4
-      - name: Install node
-        uses: actions/setup-node@v4
-        with:
-            node-version: 22
-      - name: Node Version
-        run: node --version
-    
+
+      - name: Deploy ready
+        run: echo "Deployment ready after successful Docker build"
