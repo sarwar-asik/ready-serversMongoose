@@ -1,6 +1,7 @@
 import { Schema, Types, model } from 'mongoose';
 import { IUser, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
+import { logger } from '../../shared/logger';
 
 export const UserSchema: Schema<IUser> = new Schema<IUser>(
   {
@@ -34,7 +35,6 @@ export const UserSchema: Schema<IUser> = new Schema<IUser>(
 UserSchema.statics.isUserExistsMethod = async function (
   email: string,
 ): Promise<Pick<IUser, 'password' | 'role' | 'email'> | null> {
-  // console.log("hitted isUserExistsMethod");
   const user = await User.findOne(
     { email },
     { email: 1, password: 1, role: 1, _id: 1 },
@@ -51,8 +51,7 @@ UserSchema.statics.isPasswordMatchMethod = async function (
 
 UserSchema.pre<IUser>('save', function (next) {
   if (this.role === 'user') {
-    console.log(this.budget, 'from prehook');
-
+    logger.info(`User budget set: ${this.budget} for user ${this.email}`);
     this.income = 0;
   } else if (this.role === 'seller') {
     this.budget = 0;
