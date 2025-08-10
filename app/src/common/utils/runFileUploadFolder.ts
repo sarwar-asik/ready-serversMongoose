@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { logger } from '../../shared/logger';
 
 export interface IDirectoryManager {
   ensureDirectoriesExist(baseDir?: string, folders?: string[]): void;
@@ -47,7 +48,7 @@ export class DirectoryManager implements IDirectoryManager {
   private createDirectoryIfNotExists(dirPath: string): void {
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath);
-      console.log(`Created directory: ${dirPath}`);
+      logger.info(`Created directory: ${dirPath}`);
     }
   }
 }
