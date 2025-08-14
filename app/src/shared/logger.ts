@@ -38,7 +38,7 @@ class Logger implements ILogger {
         new DailyRotateFile({
           filename: path.join(
             process.cwd(),
-            'logs',
+            '../../logs',
             'winston',
             logFilePath,
             `server-%DATE%-${logLevel}.log`,
