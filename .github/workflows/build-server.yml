@@ -41,6 +41,9 @@ jobs:
       - name: Run tests
         run: |
           cd app
+          rm -rf node_modules package-lock.json
+          mkdir -p node_modules
+          chmod -R 777 node_modules
           npm install
           npm run test
 
