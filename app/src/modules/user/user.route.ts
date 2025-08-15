@@ -10,9 +10,9 @@ const router = express.Router();
 // it is optional
 
 router.post(
-  '/create-user',
+  '/create',
   validateRequest(UserValidation.createUserZodSchema),
-  auth(ENUM_USER_ROLE.ADMIN),
+  // auth(ENUM_USER_ROLE.ADMIN),
   userController.create,
 );
 router.get(
@@ -29,19 +29,19 @@ router.get(
   userController.getAllUsers,
 );
 
-router.delete('/:id', auth(ENUM_USER_ROLE.ADMIN), userController.deleteUser);
+router.delete('/:id', auth(ENUM_USER_ROLE.ADMIN), userController.delete);
 
 router.patch(
   '/my-profile',
-  validateRequest(UserValidation.updateUserZodSchema),
-  userController.updateUser,
+  validateRequest(UserValidation.updateZodSchema),
+  userController.update,
 );
 
 router.patch(
   '/:id',
-  validateRequest(UserValidation.updateUserZodSchema),
+  validateRequest(UserValidation.updateZodSchema),
   auth(ENUM_USER_ROLE.ADMIN),
-  userController.updateUser,
+  userController.update,
 );
 
 export const UserRouter = router;

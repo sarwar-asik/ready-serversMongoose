@@ -10,7 +10,7 @@ export type IUser = {
     lastName: string;
   };
   email: string;
-  address: string;
+  address?: string;
   budget?: number;
   income?: number;
 };

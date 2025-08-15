@@ -47,10 +47,10 @@ class UserController {
     });
   });
 
-  updateUser = catchAsync(async (req: Request, res: Response) => {
+  update = catchAsync(async (req: Request, res: Response) => {
     const userId = req.params.id;
     const updateData = req.body;
-    const result = await userService.updateUser(userId, updateData);
+    const result = await userService.update(userId, updateData);
 
     if (!result) {
       throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -64,9 +64,9 @@ class UserController {
     });
   });
 
-  deleteUser = catchAsync(async (req: Request, res: Response) => {
+  delete = catchAsync(async (req: Request, res: Response) => {
     const userId = req.params.id;
-    const result = await userService.deleteUser(userId);
+    const result = await userService.delete(userId);
 
     if (!result) {
       throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
