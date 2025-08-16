@@ -6,6 +6,7 @@ import ApiError from '../../errors/ApiError';
 import { Request } from 'express';
 import { uploadLocalFileURL } from '../../helpers/uploadHelper';
 import { IImage } from './image.interface';
+import { logger, errorLogger } from '../../shared/logger';
 
 const createBufferImageDB = async (
   bufferFile: Buffer | undefined,
@@ -40,12 +41,11 @@ const createLocalImage = async (
 
         return createImageDB;
       }
-      // eslint-disable-next-line no-console
-      console.log(req.body.img);
+      logger.info(`Image upload attempted with body: ${JSON.stringify(req.body.img)}`);
     }
     return null;
   } catch (error) {
-    // console.error('Error creating local image:', error);
+    errorLogger.error(`Error creating local image: ${error}`);
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
       'Error creating local image',

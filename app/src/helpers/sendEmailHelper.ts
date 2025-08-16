@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import config from '../config';
 import ApiError from '../errors/ApiError';
 import httpStatus from 'http-status';
+import { errorLogger } from '../shared/logger';
 
 export type IEmailOptions = {
   email: string;
@@ -28,8 +29,7 @@ export async function sendEmailFunc(options: IEmailOptions) {
       html: options.html,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
+    errorLogger.error(`Failed to send email: ${error}`);
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email not sent');
   }
 }

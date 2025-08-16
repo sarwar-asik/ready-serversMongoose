@@ -34,7 +34,12 @@ class Logger implements ILogger {
         prettyPrint(),
       ),
       transports: [
-        new transports.Console(),
+        new transports.Console({
+          format: combine(
+            Logger.customFormat,
+            format.colorize({ all: true })
+          ),
+        }),
         new DailyRotateFile({
           filename: path.join(
             process.cwd(),
@@ -50,13 +55,6 @@ class Logger implements ILogger {
         }),
       ],
     });
-
-    // Add a plain console transport for simple logs
-    this.logger.add(
-      new transports.Console({
-        format: format.simple(),
-      }),
-    );
   }
 
   static customFormat = printf(({ level, message, label, timestamp }) => {
@@ -86,5 +84,5 @@ class Logger implements ILogger {
 }
 
 // Singleton instances
-export const logger = new Logger('right meow!', 'info', 'success', '1d');
-export const errorLogger = new Logger('right meow!', 'error', 'errors', '5d');
+export const logger = new Logger('APP', 'info', 'success', '14d');
+export const errorLogger = new Logger('ERROR', 'error', 'errors', '14d');

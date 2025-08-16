@@ -1,7 +1,7 @@
-/* eslint-disable no-console */
 import { Request } from 'express';
 import fs from 'fs';
 import path from 'path';
+import { logger, errorLogger } from '../shared/logger';
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface MulterFile {
   fieldName: string;
@@ -82,14 +82,14 @@ export const deleteImageFile = (filePath: string): void => {
   const absolutePath = path.join(process.cwd(), filePath);
   fs.access(absolutePath, fs.constants.F_OK, err => {
     if (err) {
-      console.error(`File not found: ${absolutePath}`);
+      errorLogger.error(`File not found: ${absolutePath}`);
       return;
     }
     fs.unlink(absolutePath, err => {
       if (err) {
-        console.error(`Error deleting file: ${absolutePath}`, err);
+        errorLogger.error(`Error deleting file: ${absolutePath} - ${err}`);
       } else {
-        console.log(`Successfully deleted file: ${absolutePath}`);
+        logger.info(`Successfully deleted file: ${absolutePath}`);
       }
     });
   });

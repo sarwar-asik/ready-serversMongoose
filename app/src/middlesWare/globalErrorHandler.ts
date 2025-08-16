@@ -6,6 +6,7 @@ import { ZodError } from 'zod';
 import handleZOdError from '../errors/handleZOdError';
 import handleCastError from '../errors/handleCastError';
 import config from '../config';
+import { errorLogger, logger } from '../shared/logger';
 
 export interface IErrorHandler {
   handle(error: any, req: Request, res: Response, next: NextFunction): void;
@@ -19,11 +20,9 @@ export class GlobalErrorHandler implements IErrorHandler {
     next: NextFunction,
   ): void {
     if (config.env === 'development') {
-      // eslint-disable-next-line no-console
-      console.log('globalErrorHandler', error);
+      logger.error(`Global Error Handler: ${error.message || error}`);
     } else {
-      // eslint-disable-next-line no-console
-      console.log('Error from globalError', error);
+      errorLogger.error(`Production Error: ${error.message || error}`);
     }
 
     let statusCode = 500;

@@ -3,6 +3,7 @@ import { ImageService } from './image.service';
 import httpStatus from 'http-status';
 import { Image_model } from './image.model';
 import sendResponse from '../../shared/sendResponse';
+import { logger } from '../../shared/logger';
 
 const createBufferImage = async (req: Request, res: Response) => {
   const bufferFile = req.file?.buffer;
@@ -30,7 +31,7 @@ const createLocalImage = async (req: Request, res: Response) => {
   });
 };
 const getImageUrl = async (req: Request, res: Response) => {
-  console.log('get image hit');
+  logger.info(`Image retrieval requested for ID: ${req.params.id}`);
   let fileId = req.params.id;
   fileId = fileId.replace(/\.[^/.]+$/, '');
 
@@ -38,7 +39,7 @@ const getImageUrl = async (req: Request, res: Response) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fileDoc = (await Image_model.findById(fileId)) as any;
-  console.log('🚀 image.controller.ts:32', fileDoc);
+  logger.info(`Image document found: ${fileDoc ? 'Yes' : 'No'} for ID: ${fileId}`);
 
   if (!fileDoc) {
     sendResponse(res, {
