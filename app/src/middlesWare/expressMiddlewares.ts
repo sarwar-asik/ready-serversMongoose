@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
 import helmet, { HelmetOptions } from 'helmet';
 import 'colors';
+import { logger } from '../shared/logger';
 
 // Compression Middleware Manager
 class CompressionManager {
@@ -61,16 +62,12 @@ class RateLimiterManager {
             (RateLimiterManager.hitCounts[ip].pathCounts[path] || 0) + 1;
         }
 
-        // eslint-disable-next-line no-console
-        console.log(
-          `from ${ip} | Total: ${RateLimiterManager.hitCounts[ip].count} | First: ${RateLimiterManager.hitCounts[
+        logger.info(
+          `Rate limit tracking - IP: ${ip} | Total: ${RateLimiterManager.hitCounts[ip].count} | First: ${RateLimiterManager.hitCounts[
             ip
           ].firstHit.toLocaleString()} | Last: ${RateLimiterManager.hitCounts[
             ip
-          ].lastHit.toLocaleTimeString()} on ${
-            RateLimiterManager.hitCounts[ip].pathCounts[path]
-          } on ${path} | ${RateLimiterManager.hitCounts[ip].pathCounts[path]}`
-            .grey,
+          ].lastHit.toLocaleTimeString()} | Path: ${path} | Count: ${RateLimiterManager.hitCounts[ip].pathCounts[path]}`
         );
         return ip;
       },

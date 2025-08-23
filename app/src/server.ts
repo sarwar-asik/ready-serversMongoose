@@ -21,7 +21,7 @@ class ServerManager {
 
   private logInfo(message: (() => string) | string) {
     const msg = typeof message === 'function' ? message() : message;
-    config.env === 'production' ? logger.info(msg) : console.log(msg);
+    logger.info(msg);
   }
   public async start(): Promise<void> {
     await this.connectDatabase();
@@ -49,7 +49,7 @@ class ServerManager {
   }
   private handleSigterm() {
     process.on('SIGTERM', () => {
-      console.log('SIGTERM is received ....');
+      logger.info('SIGTERM received, shutting down gracefully');
       if (this.server) {
         this.server.close(() => {
           process.exit(0); // Ensure process exits so ts-node-dev can restart
@@ -68,7 +68,7 @@ class ServerManager {
         serverSelectionTimeoutMS: 5000,
         socketTimeoutMS: 45000,
       });
-      this.logInfo('Database connection successful'.green.underline.bold);
+      this.logInfo('Database connection successful');
     } catch (error) {
       this.logError('Failed to connect database:', error);
     }
@@ -81,8 +81,7 @@ class ServerManager {
       const protocol =
         config.env === 'production' && config.https ? 'https' : 'http';
       const host = this.getHost();
-      const message = `Server running on the ${protocol}://${host}:${port}`
-        .yellow.underline.bold;
+      const message = `Server running on the ${protocol}://${host}:${port}`;
       this.logInfo(message);
       directoryManager.ensureDirectoriesExist();
     });
@@ -106,12 +105,8 @@ class ServerManager {
   }
 
   private logError(message: string, error: any) {
-    const errorMsg = `${message} ${error?.message || error}`.red.bold;
-    if (config.env === 'production') {
-      errorLogger.error(typeof errorMsg === 'function' ? errorMsg() : errorMsg);
-    } else {
-      console.log(errorMsg);
-    }
+    const errorMsg = `${message} ${error?.message || error}`;
+    errorLogger.error(errorMsg);
   }
 }
 
