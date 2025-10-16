@@ -10,7 +10,7 @@ export class DirectoryManager implements IDirectoryManager {
   private readonly defaultFolders: string[];
 
   constructor() {
-    this.defaultBaseDir = path.join(__dirname, '../../uploadFile');
+    this.defaultBaseDir = path.join(__dirname, '../../../uploadFile');
     this.defaultFolders = [
       'images',
       'audios',

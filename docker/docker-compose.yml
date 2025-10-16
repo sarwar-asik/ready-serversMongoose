@@ -40,8 +40,8 @@ services:
     volumes:
       - ../app:/app
       - /app/node_modules
-      - ../uploadFile:/app/uploadFile
-      - ../logs:/app/logs
+      - ../app/uploadFile:/app/uploadFile
+      - ../app/logs:/app/logs
     env_file:
       - ../app/.env
     environment:
@@ -50,12 +50,12 @@ services:
     networks:
       - ready-servers-network
     command: sh -c "npm install && npm run dev"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5001"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:5001"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s
 
   node_exporter:
     image: prom/node-exporter:latest

@@ -21,10 +21,7 @@ class UserService {
     return User.find(filter);
   }
 
-  public async updateUser(
-    id: string,
-    payload: Partial<IUser>,
-  ): Promise<IUser | null> {
+  public async update(id: string, payload: Partial<IUser>): Promise<IUser> {
     const updatedUser = await User.findByIdAndUpdate(id, payload, {
       new: true,
     });
@@ -34,7 +31,7 @@ class UserService {
     return updatedUser;
   }
 
-  public async deleteUser(id: string): Promise<IUser | null> {
+  public async delete(id: string): Promise<IUser> {
     const deletedUser = await User.findByIdAndDelete(id);
     if (!deletedUser) {
       throw new ApiError(httpStatus.NOT_FOUND, 'User not found');

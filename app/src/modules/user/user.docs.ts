@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/v1/users/create-user:
+ * /api/v1/users/create:
  *   post:
  *     summary: Create a new user
  *     tags:

@@ -18,9 +18,9 @@ const createUserZodSchema = z.object({
   }),
 });
 
-const updateUserZodSchema = createUserZodSchema.shape.body.partial()
+const updateZodSchema = createUserZodSchema.shape.body.partial();
 
 export const UserValidation = {
   createUserZodSchema,
-  updateUserZodSchema,
+  updateZodSchema,
 };
